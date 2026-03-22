@@ -370,10 +370,7 @@ export function RoomClient({ code }: RoomClientProps) {
         return;
       }
 
-      if (
-        event.error === "not-allowed" ||
-        event.error === "service-not-allowed"
-      ) {
+      if (event.error === "not-allowed" || event.error === "service-not-allowed") {
         setError("마이크 권한이 필요합니다.");
         shouldAutoRestartRecognitionRef.current = false;
         stopRequestedRef.current = true;
@@ -546,11 +543,75 @@ export function RoomClient({ code }: RoomClientProps) {
     );
   }
 
+  if (snapshot?.room.status === "ended" && snapshot.room.finalReport) {
+    return (
+      <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(255,228,92,0.62),_transparent_34%),linear-gradient(160deg,_#fffad7_0%,_#ffe4b8_36%,_#ffd2a8_70%,_#fff0c2_100%)] px-3 py-3 text-slate-900 sm:px-6">
+        <div className="mx-auto flex max-w-4xl flex-col gap-3">
+          <section className="rounded-[30px] border border-white/70 bg-white/78 p-4 shadow-[0_18px_60px_rgba(255,150,36,0.14)] sm:p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c16a16]">
+              결과 보기
+            </p>
+            <h1 className="mt-2 text-3xl font-bold leading-tight sm:text-4xl">
+              {snapshot.room.finalReport.headline}
+            </h1>
+          </section>
+
+          <section className="rounded-[30px] border border-white/70 bg-white/78 p-4 shadow-[0_18px_60px_rgba(255,150,36,0.12)] sm:p-5">
+            <div className="space-y-4 text-sm leading-7 sm:text-base">
+              <p>
+                <strong>합의된 내용</strong>
+                <br />
+                {snapshot.room.finalReport.agreement}
+              </p>
+              <p>
+                <strong>남은 쟁점</strong>
+                <br />
+                {snapshot.room.finalReport.unresolved}
+              </p>
+              <p>
+                <strong>참가자별 핵심 의견</strong>
+                <br />
+                {snapshot.room.finalReport.participantHighlights}
+              </p>
+              <p>
+                <strong>다음 행동</strong>
+                <br />
+                {snapshot.room.finalReport.nextActions}
+              </p>
+            </div>
+          </section>
+
+          <section className="rounded-[30px] border border-white/70 bg-white/78 p-4 shadow-[0_18px_60px_rgba(255,150,36,0.12)] sm:p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c16a16]">
+              참가자 벌점
+            </p>
+            <div className="mt-4 space-y-2">
+              {snapshot.room.participants.map((participant) => (
+                <div
+                  key={participant.id}
+                  className="flex items-center justify-between rounded-[20px] bg-[#fff8e5] px-4 py-3"
+                >
+                  <div>
+                    <p className="text-base font-semibold text-slate-900">{participant.name}</p>
+                    <p className="text-sm text-slate-600">{penaltyLabel(participant.score)}</p>
+                  </div>
+                  <div className="rounded-full bg-[#20160f] px-4 py-2 text-base font-bold text-[#ffd447]">
+                    {participant.score}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(255,228,92,0.62),_transparent_34%),linear-gradient(160deg,_#fffad7_0%,_#ffe4b8_36%,_#ffd2a8_70%,_#fff0c2_100%)] px-3 py-3 text-slate-900 sm:px-6">
       <div className="mx-auto flex max-w-5xl flex-col gap-3">
         <section className="rounded-[30px] border border-white/70 bg-white/76 p-4 shadow-[0_18px_60px_rgba(255,152,44,0.16)] backdrop-blur sm:p-5">
-          <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="flex flex-wrap items-start gap-3">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#c16a16]">
                 room code
@@ -559,7 +620,7 @@ export function RoomClient({ code }: RoomClientProps) {
                 {code}
               </div>
             </div>
-            <div className="flex flex-wrap gap-2 text-xs font-semibold sm:text-sm">
+            <div className="mt-1 flex flex-wrap gap-2 text-xs font-semibold sm:text-sm">
               {snapshot ? (
                 <span className="rounded-full bg-[#fff2a5] px-3 py-2 text-[#7b4c0f]">
                   {snapshot.room.participants.length}/{snapshot.room.participantsExpected}명
@@ -567,11 +628,7 @@ export function RoomClient({ code }: RoomClientProps) {
               ) : null}
               {snapshot ? (
                 <span className="rounded-full bg-[#ffe5cc] px-3 py-2 text-[#a05012]">
-                  {snapshot.room.status === "waiting"
-                    ? "대기실"
-                    : snapshot.room.status === "active"
-                      ? "토론 중"
-                      : "종료"}
+                  {snapshot.room.status === "waiting" ? "대기실" : "토론 중"}
                 </span>
               ) : null}
             </div>
@@ -585,24 +642,12 @@ export function RoomClient({ code }: RoomClientProps) {
               {snapshot?.room.topic ?? "토론방 불러오는 중"}
             </h1>
             <div className="mt-4 rounded-[20px] bg-[#2b1f16] px-4 py-4">
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#ffd447]">
-                    AI 사회자
-                  </p>
-                  <p className="mt-2 text-base leading-7 sm:text-lg">
-                    {snapshot?.room.moderatorMessage ?? "진행 상황을 준비 중입니다."}
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => speakMessage(snapshot?.room.moderatorMessage ?? "")}
-                  disabled={!snapshot?.room.moderatorMessage || isListeningSession}
-                  className="shrink-0 rounded-full bg-[#ff8b2b] px-3 py-2 text-xs font-semibold text-white transition hover:bg-[#f07509] disabled:opacity-40"
-                >
-                  다시 읽기
-                </button>
-              </div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#ffd447]">
+                AI 사회자
+              </p>
+              <p className="mt-2 text-base leading-7 sm:text-lg">
+                {snapshot?.room.moderatorMessage ?? "진행 상황을 준비 중입니다."}
+              </p>
               {currentAgenda ? (
                 <div className="mt-4 rounded-[18px] bg-[#fff7df] px-4 py-3 text-[#20160f]">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#c16a16]">
@@ -649,7 +694,7 @@ export function RoomClient({ code }: RoomClientProps) {
               </div>
             </div>
 
-            <div className="mt-4 grid grid-cols-2 gap-2">
+            <div className="mt-4 flex flex-col gap-2">
               {snapshot.room.participants.map((participant) => (
                 <div
                   key={participant.id}
@@ -672,7 +717,7 @@ export function RoomClient({ code }: RoomClientProps) {
           </section>
         ) : null}
 
-        {snapshot?.room.status !== "waiting" ? (
+        {snapshot?.room.status === "active" ? (
           <section className="flex flex-col gap-3">
             <div className="rounded-[30px] border border-white/70 bg-white/78 p-4 shadow-[0_18px_60px_rgba(255,150,36,0.14)] sm:p-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
@@ -681,25 +726,25 @@ export function RoomClient({ code }: RoomClientProps) {
                     발언 상태
                   </p>
                   <h2 className="mt-2 text-2xl font-semibold sm:text-3xl">
-                    {snapshot?.viewer.isCurrentSpeaker
+                    {snapshot.viewer.isCurrentSpeaker
                       ? "지금 내 차례"
                       : currentSpeaker
                         ? `${currentSpeaker.name} 발언 중`
                         : "발언 요청 받는 중"}
                   </h2>
                   <p className="mt-2 text-sm text-slate-700">
-                    시작 {formatTime(snapshot?.room.turn.startedAt ?? null)}
+                    시작 {formatTime(snapshot.room.turn.startedAt ?? null)}
                   </p>
                 </div>
                 <div className="rounded-[20px] bg-[#fff8df] px-4 py-3 text-sm font-semibold text-[#7b4c0f]">
-                  {snapshot?.viewer.queuePosition
+                  {snapshot.viewer.queuePosition
                     ? `내 순서 ${snapshot.viewer.queuePosition}번`
                     : "턴 종료 후 큐 초기화"}
                 </div>
               </div>
 
-              <div className="mt-4 grid grid-cols-2 gap-2">
-                {snapshot?.room.participants.map((participant) => (
+              <div className="mt-4 flex flex-col gap-2">
+                {snapshot.room.participants.map((participant) => (
                   <div
                     key={participant.id}
                     className={`rounded-[20px] px-3 py-3 ${
@@ -726,7 +771,7 @@ export function RoomClient({ code }: RoomClientProps) {
               <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
                 <button
                   type="button"
-                  disabled={isPending || !snapshot?.viewer.canRaise || snapshot.room.status !== "active"}
+                  disabled={isPending || !snapshot.viewer.canRaise}
                   onClick={() =>
                     handleAction(`/api/rooms/${code}/raise`, {
                       participantId,
@@ -742,7 +787,7 @@ export function RoomClient({ code }: RoomClientProps) {
                   onClick={handleStartSpeech}
                   className="rounded-full bg-[#ffd447] px-4 py-3 text-sm font-semibold text-[#6b4300] transition hover:bg-[#f5c52a] disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  발언시작
+                  마이크 사용
                 </button>
                 <button
                   type="button"
@@ -750,11 +795,11 @@ export function RoomClient({ code }: RoomClientProps) {
                   onClick={handleStopSpeech}
                   className="rounded-full bg-[#20160f] px-4 py-3 text-sm font-semibold text-[#fff7d8] transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  발언종료
+                  마이크 종료
                 </button>
                 <button
                   type="button"
-                  disabled={isPending || !snapshot?.viewer.canEndTurn || isListeningSession}
+                  disabled={isPending || !snapshot.viewer.canEndTurn || isListeningSession}
                   onClick={handleEndTurn}
                   className="rounded-full bg-[#fff2a5] px-4 py-3 text-sm font-semibold text-[#7b4c0f] transition hover:bg-[#ffe87b] disabled:cursor-not-allowed disabled:opacity-50"
                 >
@@ -762,7 +807,7 @@ export function RoomClient({ code }: RoomClientProps) {
                 </button>
               </div>
 
-              {snapshot?.viewer.canAdvanceAgenda && snapshot.room.status === "active" ? (
+              {snapshot.viewer.canAdvanceAgenda ? (
                 <button
                   type="button"
                   onClick={() =>
@@ -774,6 +819,21 @@ export function RoomClient({ code }: RoomClientProps) {
                   className="mt-3 w-full rounded-full bg-[#fff8df] px-4 py-3 text-sm font-semibold text-[#a05012] transition hover:bg-[#fff0c0] disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   다음 소주제
+                </button>
+              ) : null}
+
+              {snapshot.viewer.canEndDebate ? (
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleAction(`/api/rooms/${code}/end-debate`, {
+                      participantId,
+                    })
+                  }
+                  disabled={isPending || isListeningSession}
+                  className="mt-3 w-full rounded-full bg-[#ff8b2b] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#f07509] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  토론 종료
                 </button>
               ) : null}
             </div>
@@ -800,7 +860,7 @@ export function RoomClient({ code }: RoomClientProps) {
                     {liveTranscript ||
                       (isListeningSession
                         ? "말하는 동안 문장이 계속 쌓입니다."
-                        : "발언시작을 누르면 발언종료 전까지 계속 듣습니다.")}
+                        : "내 차례에 마이크 사용을 누르면 발언 종료 전까지 계속 듣습니다.")}
                   </p>
                 </div>
                 <div className="space-y-3">
@@ -817,7 +877,6 @@ export function RoomClient({ code }: RoomClientProps) {
                     disabled={
                       isPending ||
                       !manualTranscript.trim() ||
-                      snapshot?.room.status !== "active" ||
                       !canUseMic ||
                       isListeningSession
                     }
@@ -848,65 +907,6 @@ export function RoomClient({ code }: RoomClientProps) {
                   </div>
                 )}
               </div>
-            </div>
-
-            <div className="rounded-[30px] border border-white/70 bg-white/78 p-4 shadow-[0_18px_60px_rgba(255,150,36,0.12)] sm:p-5">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c16a16]">
-                    마무리
-                  </p>
-                  <h2 className="mt-2 text-2xl font-semibold">결과 보기</h2>
-                </div>
-                {snapshot?.viewer.canEndDebate && snapshot.room.status === "active" ? (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      handleAction(`/api/rooms/${code}/end-debate`, {
-                        participantId,
-                      })
-                    }
-                    disabled={isPending || isListeningSession}
-                    className="rounded-full bg-[#ff8b2b] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#f07509] disabled:opacity-50"
-                  >
-                    토론 종료
-                  </button>
-                ) : null}
-              </div>
-
-              {snapshot?.room.status === "ended" && snapshot.room.finalReport ? (
-                <div className="mt-4 rounded-[24px] bg-[#20160f] p-5 text-[#fff6dc]">
-                  <h3 className="text-xl font-semibold sm:text-2xl">
-                    {snapshot.room.finalReport.headline}
-                  </h3>
-                  <div className="mt-4 space-y-4 text-sm leading-7">
-                    <p>
-                      <strong>합의된 내용</strong>
-                      <br />
-                      {snapshot.room.finalReport.agreement}
-                    </p>
-                    <p>
-                      <strong>남은 쟁점</strong>
-                      <br />
-                      {snapshot.room.finalReport.unresolved}
-                    </p>
-                    <p>
-                      <strong>참가자별 핵심 의견</strong>
-                      <br />
-                      {snapshot.room.finalReport.participantHighlights}
-                    </p>
-                    <p>
-                      <strong>다음 행동</strong>
-                      <br />
-                      {snapshot.room.finalReport.nextActions}
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <div className="mt-4 rounded-[22px] bg-[#fff8e5] px-4 py-4 text-sm text-slate-700">
-                  토론 종료 후 최종 정리만 보여줍니다.
-                </div>
-              )}
             </div>
           </section>
         ) : null}
