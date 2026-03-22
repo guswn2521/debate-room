@@ -20,10 +20,12 @@ export async function POST(
   try {
     return Response.json(startSpeech(code, body.participantId, body.startedAt));
   } catch (error) {
+    const message =
+      error instanceof Error && error.message === "ROOM_NOT_ACTIVE"
+        ? "토론이 아직 시작되지 않았거나 이미 종료되었습니다."
+        : "음성 시작 처리에 실패했습니다.";
     return Response.json(
-      {
-        error: error instanceof Error ? error.message : "음성 시작 처리에 실패했습니다.",
-      },
+      { error: message },
       { status: 400 },
     );
   }

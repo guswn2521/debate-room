@@ -53,26 +53,38 @@ export function buildAgenda(topic: string): AgendaItem[] {
 }
 
 export function moderatorIntro(topic: string, expected: number) {
+  return `오늘의 주제는 "${topic}"입니다. ${expected}명이 모두 입장하면 바로 토론을 시작할게요.`;
+}
+
+export function waitingPrompt(joined: number, expected: number) {
   return [
-    `오늘의 주제는 "${topic}"입니다.`,
-    `${expected}명이 한 번에 한 사람씩 말하고, 발언이 끝날 때마다 손들기 큐를 다시 받겠습니다.`,
-    "겹쳐 말하기나 과열 신호가 감지되면 벌점과 진동이 들어오니 차분하게 이어가볼게요.",
+    `${joined}명 입장했습니다.`,
+    `${expected}명이 모두 모이면 토론을 시작합니다.`,
+  ].join(" ");
+}
+
+export function debateStartedPrompt(room: DebateRoom) {
+  const agenda = room.agenda[room.currentAgendaIndex];
+  return [
+    "모든 참가자가 입장해 토론을 시작합니다.",
+    `첫 소주제는 "${agenda.title}"입니다.`,
+    "발언 요청은 선착순이고, 턴이 끝나면 요청은 다시 받겠습니다.",
   ].join(" ");
 }
 
 export function speakerPrompt(room: DebateRoom, speakerName: string) {
   const agenda = room.agenda[room.currentAgendaIndex];
-  return `${speakerName} 차례입니다. 지금 소주제는 "${agenda.title}"이고, ${agenda.goal}`;
+  return `${speakerName} 차례입니다. "${agenda.title}"에 대해 이야기해주세요.`;
 }
 
 export function idlePrompt(room: DebateRoom) {
   const agenda = room.agenda[room.currentAgendaIndex];
-  return `현재 발언이 비었습니다. "${agenda.title}"에 대해 이야기하고 싶은 분이 발언 요청 버튼을 눌러주세요.`;
+  return `발언이 비었습니다. "${agenda.title}"에 대해 말할 분은 발언 요청 버튼을 눌러주세요.`;
 }
 
 export function agendaAdvancedPrompt(room: DebateRoom) {
   const agenda = room.agenda[room.currentAgendaIndex];
-  return `다음 소주제로 넘어갑니다. "${agenda.title}"를 중심으로 이야기해볼게요. ${agenda.goal}`;
+  return `다음 소주제로 넘어갑니다. "${agenda.title}"를 중심으로 이야기해볼게요.`;
 }
 
 export function penaltyState(score: number): PenaltyState {

@@ -4,10 +4,12 @@ import {
   buildFinalReport,
   buildSegmentSummary,
   codeFromTopic,
+  debateStartedPrompt,
   idlePrompt,
   moderatorIntro,
   penaltyState,
   speakerPrompt,
+  waitingPrompt,
 } from "@/lib/debate-engine";
 import {
   type ActiveSpeechSession,
@@ -138,6 +140,24 @@ function clearRaiseQueue(room: DebateRoom) {
   touch(room);
 }
 
+function syncWaitingState(room: DebateRoom) {
+  if (room.status === "ended") {
+    return;
+  }
+
+  const joined = room.participants.length;
+  if (joined >= room.participantsExpected) {
+    room.status = "active";
+    if (!room.startedAt) {
+      room.startedAt = now();
+    }
+    room.moderatorMessage = debateStartedPrompt(room);
+  } else {
+    room.status = "waiting";
+    room.moderatorMessage = waitingPrompt(joined, room.participantsExpected);
+  }
+}
+
 function completeAgenda(room: DebateRoom) {
   room.agenda = room.agenda.map((item, index) => {
     if (index < room.currentAgendaIndex) {
@@ -200,7 +220,8 @@ export function createRoom(input: CreateRoomInput) {
     topic: input.topic.trim(),
     participantsExpected: input.participantCount,
     hostId,
-    status: "active",
+    status: "waiting",
+    startedAt: null,
     createdAt: now(),
     updatedAt: now(),
     version: 1,
@@ -233,6 +254,7 @@ export function createRoom(input: CreateRoomInput) {
   };
 
   completeAgenda(room);
+  syncWaitingState(room);
   store.rooms.set(code, room);
 
   return {
@@ -266,6 +288,7 @@ export function joinRoom(code: string, name: string) {
   };
 
   room.participants.push(participant);
+  syncWaitingState(room);
   touch(room);
 
   return {
@@ -281,6 +304,10 @@ export function getRoomSnapshot(code: string, participantId: string) {
 export function requestRaise(code: string, participantId: string) {
   const room = getRoomOrThrow(code);
   const participant = getParticipant(room, participantId);
+
+  if (room.status === "waiting") {
+    throw new Error("WAITING_FOR_PARTICIPANTS");
+  }
 
   if (room.status !== "active") {
     throw new Error("ROOM_ENDED");
@@ -428,47 +455,43 @@ export function startSpeech(code: string, participantId: string, startedAt: stri
   const room = getRoomOrThrow(code);
   getParticipant(room, participantId);
 
+  if (room.status !== "active") {
+    throw new Error("ROOM_NOT_ACTIVE");
+  }
+
   const existing = room.activeSpeech.find(
     (session) => session.participantId === participantId,
   );
 
   if (!existing) {
+    const overlapRisk = room.activeSpeech.some(
+      (session) => session.participantId !== participantId,
+    );
+    const offTurnRisk = Boolean(
+      room.turn.speakerId && room.turn.speakerId !== participantId,
+    );
     room.activeSpeech.push({
       participantId,
       startedAt,
+      overlapRisk,
+      offTurnRisk,
     } satisfies ActiveSpeechSession);
-  }
-
-  const activeByOthers = room.activeSpeech.find(
-    (session) => session.participantId !== participantId,
-  );
-
-  let penalty: PenaltyEvent | null = null;
-
-  if (
-    activeByOthers ||
-    (room.turn.speakerId && room.turn.speakerId !== participantId)
-  ) {
-    penalty = applyPenalty(
-      room,
-      participantId,
-      "overlap",
-      1,
-      "겹쳐 말하기가 감지되어 벌점 1점이 추가되었습니다.",
-    );
   }
 
   touch(room);
 
   return {
     snapshot: serialize(room, participantId),
-    penalty,
+    penalty: null,
   };
 }
 
 export function endSpeech(code: string, input: EndSpeechInput) {
   const room = getRoomOrThrow(code);
   const participant = getParticipant(room, input.participantId);
+  const session = room.activeSpeech.find(
+    (entry) => entry.participantId === input.participantId,
+  );
 
   room.activeSpeech = room.activeSpeech.filter(
     (session) => session.participantId !== input.participantId,
@@ -476,28 +499,50 @@ export function endSpeech(code: string, input: EndSpeechInput) {
 
   let penaltyScore = 0;
   const newPenalties: PenaltyEvent[] = [];
+  const durationMs = Math.max(
+    Date.parse(input.endedAt) - Date.parse(input.startedAt),
+    0,
+  );
+  const transcript = input.transcript.trim();
+  const transcriptLength = transcript.replace(/\s+/g, "").length;
+  const sustainedSpeech = durationMs >= 2400 || transcriptLength >= 18;
 
-  if (input.peakVolume >= 0.72) {
+  if (session && sustainedSpeech && (session.overlapRisk || session.offTurnRisk)) {
+    newPenalties.push(
+      applyPenalty(
+        room,
+        input.participantId,
+        "overlap",
+        1,
+        "겹쳐 말해 벌점 +1",
+      ),
+    );
+    penaltyScore += 1;
+  }
+
+  if (sustainedSpeech && input.peakVolume >= 0.9) {
     newPenalties.push(
       applyPenalty(
         room,
         input.participantId,
         "tone",
         1,
-        "높은 톤 신호가 감지되어 벌점 1점이 추가되었습니다.",
+        "목소리가 커져 벌점 +1",
       ),
     );
     penaltyScore += 1;
   }
 
-  const recentPenalty = [...room.penaltyEvents]
-    .reverse()
-    .find((event) => event.participantId === input.participantId);
+  const recentPenaltyCount = room.penaltyEvents.filter(
+    (event) =>
+      event.participantId === input.participantId &&
+      Date.parse(input.endedAt) - Date.parse(event.createdAt) < 20_000,
+  ).length;
 
   if (
-    recentPenalty &&
-    Date.parse(input.endedAt) - Date.parse(recentPenalty.createdAt) < 18_000 &&
-    recentPenalty.type !== "repeat"
+    sustainedSpeech &&
+    newPenalties.length > 0 &&
+    recentPenaltyCount >= 2
   ) {
     newPenalties.push(
       applyPenalty(
@@ -505,13 +550,12 @@ export function endSpeech(code: string, input: EndSpeechInput) {
         input.participantId,
         "repeat",
         1,
-        "짧은 시간 안에 다시 경고가 발생해 추가 벌점 1점이 부여되었습니다.",
+        "경고가 반복돼 벌점 +1",
       ),
     );
     penaltyScore += 1;
   }
 
-  const transcript = input.transcript.trim();
   if (transcript) {
     room.utterances.push({
       id: crypto.randomUUID(),
@@ -526,6 +570,8 @@ export function endSpeech(code: string, input: EndSpeechInput) {
       source: input.source,
     });
   }
+
+  participant.pendingBgmCue = null;
 
   touch(room);
 

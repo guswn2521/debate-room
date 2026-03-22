@@ -71,93 +71,55 @@ export function LandingPage() {
   };
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(255,204,140,0.55),_transparent_42%),linear-gradient(160deg,_#fdf5e7_0%,_#f4e6d8_30%,_#ecd9d1_55%,_#d5e1e6_100%)] px-5 py-8 text-slate-900 sm:px-8">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
-        <section className="rounded-[36px] border border-white/60 bg-white/70 p-6 shadow-[0_20px_70px_rgba(61,43,22,0.13)] backdrop-blur sm:p-10">
-          <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr]">
-            <div className="space-y-6">
-              <span className="inline-flex rounded-full bg-[#163d3a] px-4 py-2 text-sm font-semibold tracking-[0.18em] text-[#f6e7c8] uppercase">
-                Family Debate Room
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(255,230,92,0.62),_transparent_36%),linear-gradient(155deg,_#fff8d7_0%,_#ffe6b4_46%,_#ffd0a4_100%)] px-5 py-6 text-slate-900 sm:px-8">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6">
+        <section className="rounded-[34px] border border-white/70 bg-white/72 p-6 shadow-[0_22px_70px_rgba(255,148,31,0.14)] backdrop-blur sm:p-8">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <span className="inline-flex rounded-full bg-[#ff8b2b] px-4 py-2 text-sm font-semibold tracking-[0.18em] text-white uppercase">
+                Debate Room
               </span>
-              <div className="space-y-4">
-                <h1 className="max-w-4xl text-4xl font-bold leading-tight sm:text-6xl">
-                  가족이 싸우지 않고도 끝까지 이야기할 수 있게 만드는 토론 앱
-                </h1>
-                <p className="max-w-2xl text-lg leading-8 text-slate-700">
-                  방 코드로 모이고, AI 사회자가 소주제를 나눠주고, 한 번에 한 사람만 발언하게
-                  흐름을 정리합니다. 겹쳐 말하거나 톤이 올라가면 진동과 벌점이 들어오고,
-                  마지막엔 합의문과 남은 쟁점이 정리됩니다.
-                </p>
-              </div>
-              <div className="grid gap-3 sm:grid-cols-3">
-                {[
-                  "6자리 방 코드로 바로 입장",
-                  "발언 요청은 선착순, 턴 종료 후 큐 초기화",
-                  "브라우저 음성 인식 + 수동 입력 폴백",
-                ].map((item) => (
-                  <div
-                    key={item}
-                    className="rounded-[24px] border border-slate-200 bg-white/90 px-4 py-4 text-sm font-medium text-slate-700"
-                  >
-                    {item}
-                  </div>
-                ))}
-              </div>
+              <h1 className="mt-4 text-4xl font-bold leading-tight sm:text-6xl">
+                가족 토론방
+              </h1>
+              <p className="mt-3 max-w-2xl text-lg text-slate-700">
+                방 코드로 모이면 인원이 다 찼을 때 자동 시작됩니다.
+              </p>
             </div>
-            <div className="rounded-[30px] bg-[#173f3b] p-6 text-[#f9f3ea] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
-              <div className="space-y-5">
-                <div>
-                  <p className="text-sm uppercase tracking-[0.2em] text-[#d2b582]">토론 규칙</p>
-                  <h2 className="mt-2 text-2xl font-semibold">기본 모드</h2>
-                </div>
-                <div className="space-y-3 text-sm leading-7 text-[#f1e3ca]">
-                  <p>1. 발언 요청 버튼은 선착순입니다.</p>
-                  <p>2. 현재 발언이 끝나면 대기열은 전부 삭제됩니다.</p>
-                  <p>3. 겹쳐 말하기와 높은 톤은 벌점이 누적됩니다.</p>
-                  <p>4. 벌점 4점 이상이면 다음 발언 때 웃긴 BGM이 나옵니다.</p>
-                </div>
-              </div>
+            <div className="flex flex-wrap gap-2 text-sm font-semibold">
+              <span className="rounded-full bg-[#fff2a5] px-4 py-2 text-[#7b4c0f]">자동 시작</span>
+              <span className="rounded-full bg-[#ffe4cc] px-4 py-2 text-[#a05012]">사회자 음성 안내</span>
+              <span className="rounded-full bg-[#fff7df] px-4 py-2 text-slate-700">선착순 발언</span>
             </div>
           </div>
         </section>
 
         <section className="grid gap-6 lg:grid-cols-2">
-          <div className="rounded-[32px] border border-white/60 bg-white/80 p-6 shadow-[0_14px_50px_rgba(75,45,25,0.12)] backdrop-blur sm:p-8">
-            <div className="space-y-5">
-              <div>
-                <p className="text-sm uppercase tracking-[0.18em] text-[#8b5d33]">방 만들기</p>
-                <h2 className="mt-2 text-3xl font-semibold">새 토론 시작</h2>
-              </div>
-              <div className="space-y-4">
-                <label className="block space-y-2">
-                  <span className="text-sm font-semibold text-slate-700">토론 주제</span>
-                  <textarea
-                    className="min-h-32 w-full rounded-[22px] border border-slate-200 bg-[#fffaf3] px-4 py-3 text-base outline-none transition focus:border-[#d38f40] focus:ring-4 focus:ring-[#f5d9b3]"
-                    value={topic}
-                    onChange={(event) => setTopic(event.target.value)}
-                  />
-                </label>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <label className="block space-y-2">
-                    <span className="text-sm font-semibold text-slate-700">방장 이름</span>
-                    <input
-                      className="w-full rounded-[18px] border border-slate-200 bg-[#fffaf3] px-4 py-3 outline-none transition focus:border-[#d38f40] focus:ring-4 focus:ring-[#f5d9b3]"
-                      value={hostName}
-                      onChange={(event) => setHostName(event.target.value)}
-                    />
-                  </label>
-                  <label className="block space-y-2">
-                    <span className="text-sm font-semibold text-slate-700">참가 인원</span>
-                    <input
-                      type="number"
-                      min={2}
-                      max={8}
-                      className="w-full rounded-[18px] border border-slate-200 bg-[#fffaf3] px-4 py-3 outline-none transition focus:border-[#d38f40] focus:ring-4 focus:ring-[#f5d9b3]"
-                      value={participantCount}
-                      onChange={(event) => setParticipantCount(Number(event.target.value))}
-                    />
-                  </label>
-                </div>
+          <div className="rounded-[30px] border border-white/70 bg-white/78 p-6 shadow-[0_18px_60px_rgba(255,148,31,0.12)]">
+            <p className="text-sm uppercase tracking-[0.18em] text-[#c46d16]">새 방 만들기</p>
+            <div className="mt-5 space-y-4">
+              <textarea
+                className="min-h-32 w-full rounded-[24px] border border-[#ffd698] bg-[#fff9e8] px-4 py-4 text-base outline-none transition focus:border-[#ff9b35] focus:ring-4 focus:ring-[#ffe18e]"
+                value={topic}
+                onChange={(event) => setTopic(event.target.value)}
+                placeholder="토론 주제를 입력하세요."
+              />
+              <div className="grid gap-4 sm:grid-cols-2">
+                <input
+                  className="w-full rounded-[18px] border border-[#ffd698] bg-[#fffdf4] px-4 py-3 outline-none transition focus:border-[#ff9b35] focus:ring-4 focus:ring-[#ffe18e]"
+                  value={hostName}
+                  onChange={(event) => setHostName(event.target.value)}
+                  placeholder="방장 이름"
+                />
+                <input
+                  type="number"
+                  min={2}
+                  max={8}
+                  className="w-full rounded-[18px] border border-[#ffd698] bg-[#fffdf4] px-4 py-3 outline-none transition focus:border-[#ff9b35] focus:ring-4 focus:ring-[#ffe18e]"
+                  value={participantCount}
+                  onChange={(event) => setParticipantCount(Number(event.target.value))}
+                  placeholder="참가 인원"
+                />
               </div>
               {createError ? (
                 <p className="rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-700">{createError}</p>
@@ -166,38 +128,29 @@ export function LandingPage() {
                 type="button"
                 onClick={handleCreate}
                 disabled={isCreating}
-                className="inline-flex w-full items-center justify-center rounded-full bg-[#c65d32] px-5 py-4 text-base font-semibold text-white transition hover:bg-[#a44822] disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full rounded-full bg-[#ff8b2b] px-5 py-4 text-base font-semibold text-white transition hover:bg-[#f07509] disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isCreating ? "방을 만드는 중..." : "토론방 만들기"}
+                {isCreating ? "방 만드는 중..." : "방 만들기"}
               </button>
             </div>
           </div>
 
-          <div className="rounded-[32px] border border-white/60 bg-[#fdfaf4]/90 p-6 shadow-[0_14px_50px_rgba(21,53,68,0.1)] backdrop-blur sm:p-8">
-            <div className="space-y-5">
-              <div>
-                <p className="text-sm uppercase tracking-[0.18em] text-[#336b72]">방 참가</p>
-                <h2 className="mt-2 text-3xl font-semibold">코드로 바로 입장</h2>
-              </div>
-              <div className="space-y-4">
-                <label className="block space-y-2">
-                  <span className="text-sm font-semibold text-slate-700">방 코드</span>
-                  <input
-                    className="w-full rounded-[18px] border border-slate-200 bg-white px-4 py-3 text-lg uppercase tracking-[0.28em] outline-none transition focus:border-[#5e9aa2] focus:ring-4 focus:ring-[#d2ecef]"
-                    value={joinCode}
-                    onChange={(event) => setJoinCode(event.target.value.toUpperCase())}
-                    maxLength={6}
-                  />
-                </label>
-                <label className="block space-y-2">
-                  <span className="text-sm font-semibold text-slate-700">내 이름</span>
-                  <input
-                    className="w-full rounded-[18px] border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-[#5e9aa2] focus:ring-4 focus:ring-[#d2ecef]"
-                    value={joinName}
-                    onChange={(event) => setJoinName(event.target.value)}
-                  />
-                </label>
-              </div>
+          <div className="rounded-[30px] border border-white/70 bg-white/78 p-6 shadow-[0_18px_60px_rgba(255,148,31,0.12)]">
+            <p className="text-sm uppercase tracking-[0.18em] text-[#c46d16]">코드로 참가</p>
+            <div className="mt-5 space-y-4">
+              <input
+                className="w-full rounded-[18px] border border-[#ffd698] bg-[#fffdf4] px-4 py-4 text-lg uppercase tracking-[0.26em] outline-none transition focus:border-[#ff9b35] focus:ring-4 focus:ring-[#ffe18e]"
+                value={joinCode}
+                onChange={(event) => setJoinCode(event.target.value.toUpperCase())}
+                placeholder="ABC123"
+                maxLength={6}
+              />
+              <input
+                className="w-full rounded-[18px] border border-[#ffd698] bg-[#fffdf4] px-4 py-3 outline-none transition focus:border-[#ff9b35] focus:ring-4 focus:ring-[#ffe18e]"
+                value={joinName}
+                onChange={(event) => setJoinName(event.target.value)}
+                placeholder="내 이름"
+              />
               {joinError ? (
                 <p className="rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-700">{joinError}</p>
               ) : null}
@@ -205,7 +158,7 @@ export function LandingPage() {
                 type="button"
                 onClick={handleJoin}
                 disabled={isJoining}
-                className="inline-flex w-full items-center justify-center rounded-full bg-[#195f68] px-5 py-4 text-base font-semibold text-white transition hover:bg-[#0f4b52] disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full rounded-full bg-[#20160f] px-5 py-4 text-base font-semibold text-[#fff7d8] transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isJoining ? "입장 중..." : "방 참가하기"}
               </button>
