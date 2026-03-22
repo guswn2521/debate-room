@@ -486,11 +486,8 @@ export function endDebate(code: string, participantId: string) {
     createdAt: now(),
   });
   room.moderatorMessage = "오늘 토론이 종료되었습니다. 정리본을 확인하고 다음 대화에 이어가면 됩니다.";
-
   room.participants = room.participants.map((entry) => ({
     ...entry,
-    score: 0,
-    penaltyState: "clear",
     pendingBgmCue: null,
   }));
   touch(room);

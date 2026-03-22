@@ -72,26 +72,15 @@ export function LandingPage() {
 
   return (
     <main className="flex min-h-screen items-center bg-[radial-gradient(circle_at_top,_rgba(255,226,87,0.64),_transparent_35%),linear-gradient(160deg,_#fff8d7_0%,_#ffe6b4_52%,_#ffd3a2_100%)] px-3 py-3 text-slate-900 sm:px-5">
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-3">
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-3">
         <section className="rounded-[28px] border border-white/70 bg-white/72 px-4 py-4 shadow-[0_16px_48px_rgba(255,148,31,0.14)] backdrop-blur sm:px-6">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <span className="inline-flex rounded-full bg-[#ff8b2b] px-3 py-1.5 text-xs font-semibold tracking-[0.18em] text-white uppercase">
-                Debate Room
-              </span>
-              <h1 className="mt-3 text-3xl font-bold leading-none sm:text-5xl">가족 토론방</h1>
-              <p className="mt-2 text-sm text-slate-700 sm:text-base">
-                방 만들기 또는 코드 입력만 하면 바로 시작할 수 있어요.
-              </p>
-            </div>
-            <div className="flex gap-2 text-xs font-semibold sm:text-sm">
-              <span className="rounded-full bg-[#fff2a5] px-3 py-2 text-[#7b4c0f]">자동 시작</span>
-              <span className="rounded-full bg-[#ffe4cc] px-3 py-2 text-[#a05012]">음성 사회자</span>
-            </div>
-          </div>
+          <span className="inline-flex rounded-full bg-[#ff8b2b] px-3 py-1.5 text-xs font-semibold tracking-[0.18em] text-white uppercase">
+            Debate Room
+          </span>
+          <h1 className="mt-3 text-3xl font-bold leading-none sm:text-5xl">가족 토론방</h1>
         </section>
 
-        <section className="grid grid-cols-2 gap-3">
+        <section className="flex flex-col gap-3">
           <div className="rounded-[28px] border border-white/70 bg-white/78 p-4 shadow-[0_14px_44px_rgba(255,148,31,0.12)] sm:p-5">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c46d16]">방 만들기</p>
             <div className="mt-3 space-y-2.5">
@@ -146,9 +135,6 @@ export function LandingPage() {
                 onChange={(event) => setJoinName(event.target.value)}
                 placeholder="내 이름"
               />
-              <div className="rounded-[16px] bg-[#fff7df] px-3 py-3 text-xs leading-5 text-slate-700">
-                코드만 입력하면 대기실로 바로 들어갑니다.
-              </div>
               {joinError ? (
                 <p className="rounded-2xl bg-rose-50 px-3 py-2 text-xs text-rose-700">{joinError}</p>
               ) : null}
