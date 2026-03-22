@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f0e6;
-  --foreground: #19222c;
+  --background: #fff8d7;
+  --foreground: #1f140d;
   --panel: rgba(255, 255, 255, 0.76);
   --font-sans-custom: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
   --font-mono-custom: "IBM Plex Mono", "Menlo", "Consolas", monospace;
@@ -35,5 +35,5 @@ button {
 }
 
 ::selection {
-  background: rgba(198, 93, 50, 0.22);
+  background: rgba(255, 196, 67, 0.45);
 }

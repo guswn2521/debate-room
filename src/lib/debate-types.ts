@@ -1,4 +1,4 @@
-export type DebateStatus = "active" | "ended";
+export type DebateStatus = "waiting" | "active" | "ended";
 
 export type AgendaStatus = "upcoming" | "active" | "complete";
 
@@ -86,6 +86,8 @@ export interface FinalReport {
 export interface ActiveSpeechSession {
   participantId: string;
   startedAt: string;
+  overlapRisk: boolean;
+  offTurnRisk: boolean;
 }
 
 export interface DebateRoom {
@@ -94,6 +96,7 @@ export interface DebateRoom {
   participantsExpected: number;
   hostId: string;
   status: DebateStatus;
+  startedAt: string | null;
   createdAt: string;
   updatedAt: string;
   version: number;
