@@ -297,6 +297,53 @@ export function joinRoom(code: string, name: string) {
   };
 }
 
+export function leaveRoom(code: string, participantId: string) {
+  const store = getStore();
+  const room = getRoomOrThrow(code);
+
+  if (room.status !== "waiting") {
+    throw new Error("LEAVE_ONLY_WAITING");
+  }
+
+  getParticipant(room, participantId);
+
+  room.participants = room.participants.filter(
+    (participant) => participant.id !== participantId,
+  );
+  room.raiseQueue = room.raiseQueue.filter(
+    (request) => request.participantId !== participantId,
+  );
+  room.activeSpeech = room.activeSpeech.filter(
+    (session) => session.participantId !== participantId,
+  );
+
+  if (room.participants.length === 0) {
+    store.rooms.delete(room.code);
+
+    return {
+      ok: true,
+      roomClosed: true,
+    };
+  }
+
+  if (room.hostId === participantId) {
+    room.hostId = room.participants[0].id;
+  }
+
+  room.participants = room.participants.map((participant) => ({
+    ...participant,
+    isHost: participant.id === room.hostId,
+  }));
+
+  syncWaitingState(room);
+  touch(room);
+
+  return {
+    ok: true,
+    roomClosed: false,
+  };
+}
+
 export function getRoomSnapshot(code: string, participantId: string) {
   return serialize(getRoomOrThrow(code), participantId);
 }
