@@ -83,6 +83,13 @@ export function LandingPage() {
           <h1 className="mt-3 text-3xl font-bold leading-none text-[#14213d] sm:text-5xl">
             가족 토론방
           </h1>
+          <button
+            type="button"
+            onClick={() => router.push("/design-samples")}
+            className="mt-4 rounded-full border border-[#d9cfbc] bg-[#fffdf8] px-4 py-2 text-sm font-semibold text-[#1f3c88] transition hover:bg-[#f6f1e5]"
+          >
+            디자인 샘플 보기
+          </button>
         </section>
 
         <section className="flex flex-col gap-3">
