@@ -112,6 +112,7 @@ export function RoomClient({ code }: RoomClientProps) {
   const [speechSupported, setSpeechSupported] = useState(false);
   const [isListeningSession, setIsListeningSession] = useState(false);
   const [showRules, setShowRules] = useState(false);
+  const [showModeratorScript, setShowModeratorScript] = useState(false);
   const [speechSuppressedWhileSpeaking, setSpeechSuppressedWhileSpeaking] =
     useState(false);
   const [isPending, startTransition] = useTransition();
@@ -512,15 +513,15 @@ export function RoomClient({ code }: RoomClientProps) {
 
   if (!participantId) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#fff7d8] px-6 text-center">
-        <div className="max-w-lg rounded-[28px] bg-white p-8 shadow-[0_18px_60px_rgba(255,155,40,0.16)]">
+      <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(93,247,255,0.35),_transparent_42%),linear-gradient(160deg,_#fff7b3_0%,_#c6f7ff_44%,_#ffd2c2_100%)] px-6 text-center">
+        <div className="max-w-lg rounded-[28px] border border-white/70 bg-white/85 p-8 shadow-[0_18px_60px_rgba(19,116,160,0.16)]">
           <p className="text-lg font-semibold text-slate-900">
             참가자 정보가 없습니다. 메인 화면에서 다시 입장해주세요.
           </p>
           <button
             type="button"
             onClick={() => router.push("/")}
-            className="mt-6 rounded-full bg-[#ff8b2b] px-5 py-3 font-semibold text-white"
+            className="mt-6 rounded-full bg-[#ff6f61] px-5 py-3 font-semibold text-white transition hover:bg-[#eb5a4d]"
           >
             홈으로
           </button>
@@ -531,13 +532,14 @@ export function RoomClient({ code }: RoomClientProps) {
 
   if (snapshot?.room.status === "ended" && snapshot.room.finalReport) {
     return (
-      <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(255,228,92,0.62),_transparent_34%),linear-gradient(160deg,_#fffad7_0%,_#ffe4b8_36%,_#ffd2a8_70%,_#fff0c2_100%)] px-3 py-3 text-slate-900 sm:px-6">
+      <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(93,247,255,0.35),_transparent_42%),linear-gradient(160deg,_#fff7b3_0%,_#c6f7ff_44%,_#ffd2c2_100%)] px-3 py-3 text-slate-900 sm:px-6">
         <div className="mx-auto flex max-w-4xl flex-col gap-3">
-          <section className="rounded-[30px] border border-white/70 bg-white/78 p-4 shadow-[0_18px_60px_rgba(255,150,36,0.14)] sm:p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c16a16]">
-              결과보기
-            </p>
-            <p className="mt-2 text-sm font-semibold text-[#9a5a17] sm:text-base">
+          <p className="px-1 text-sm font-black uppercase tracking-[0.26em] text-[#f05a4a] sm:text-base">
+            결과보기
+          </p>
+
+          <section className="rounded-[30px] border border-white/70 bg-white/82 p-4 shadow-[0_18px_60px_rgba(19,116,160,0.14)] sm:p-5">
+            <p className="text-sm font-semibold text-[#126b84] sm:text-base">
               메인 주제 · {snapshot.room.topic}
             </p>
             <h1 className="mt-2 text-3xl font-bold leading-tight sm:text-4xl">
@@ -545,7 +547,7 @@ export function RoomClient({ code }: RoomClientProps) {
             </h1>
           </section>
 
-          <section className="rounded-[30px] border border-white/70 bg-white/78 p-4 shadow-[0_18px_60px_rgba(255,150,36,0.12)] sm:p-5">
+          <section className="rounded-[30px] border border-white/70 bg-white/82 p-4 shadow-[0_18px_60px_rgba(19,116,160,0.12)] sm:p-5">
             <div className="space-y-4 text-sm leading-7 sm:text-base">
               <p>
                 <strong>합의된 내용</strong>
@@ -570,117 +572,144 @@ export function RoomClient({ code }: RoomClientProps) {
             </div>
           </section>
 
-          <section className="rounded-[30px] border border-white/70 bg-white/78 p-4 shadow-[0_18px_60px_rgba(255,150,36,0.12)] sm:p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c16a16]">
+          <section className="rounded-[30px] border border-white/70 bg-white/82 p-4 shadow-[0_18px_60px_rgba(19,116,160,0.12)] sm:p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#126b84]">
               참가자 벌점
             </p>
             <div className="mt-4 space-y-2">
               {snapshot.room.participants.map((participant) => (
                 <div
                   key={participant.id}
-                  className="flex items-center justify-between rounded-[20px] bg-[#fff8e5] px-4 py-3"
+                  className="flex items-center justify-between rounded-[20px] bg-[#eefcff] px-4 py-3"
                 >
                   <div>
                     <p className="text-base font-semibold text-slate-900">{participant.name}</p>
                     <p className="text-sm text-slate-600">{penaltyLabel(participant.score)}</p>
                   </div>
-                  <div className="rounded-full bg-[#20160f] px-4 py-2 text-base font-bold text-[#ffd447]">
+                  <div className="rounded-full bg-[#1c4f73] px-4 py-2 text-base font-bold text-[#fff7b3]">
                     {participant.score}
                   </div>
                 </div>
               ))}
             </div>
           </section>
+
+          <button
+            type="button"
+            onClick={() => router.push("/")}
+            className="w-full rounded-full bg-[#ff6f61] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#eb5a4d]"
+          >
+            메인으로 돌아가기
+          </button>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(255,228,92,0.62),_transparent_34%),linear-gradient(160deg,_#fffad7_0%,_#ffe4b8_36%,_#ffd2a8_70%,_#fff0c2_100%)] px-3 py-3 text-slate-900 sm:px-6">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(93,247,255,0.35),_transparent_42%),linear-gradient(160deg,_#fff7b3_0%,_#c6f7ff_44%,_#ffd2c2_100%)] px-3 py-3 text-slate-900 sm:px-6">
       <div className="mx-auto flex max-w-5xl flex-col gap-3">
-        <section className="rounded-[30px] border border-white/70 bg-white/76 p-4 shadow-[0_18px_60px_rgba(255,152,44,0.16)] backdrop-blur sm:p-5">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c16a16]">
-            {screenLabel}
-          </p>
+        <p className="px-1 text-sm font-black uppercase tracking-[0.26em] text-[#f05a4a] sm:text-base">
+          {screenLabel}
+        </p>
+
+        <section className="rounded-[30px] border border-white/70 bg-white/82 p-4 shadow-[0_18px_60px_rgba(19,116,160,0.16)] backdrop-blur sm:p-5">
           <div className="flex flex-wrap items-start gap-3">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#c16a16]">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#126b84]">
                 {snapshot?.room.status === "waiting" ? "방 코드" : "메인 주제"}
               </p>
-              <div className="mt-2 text-3xl font-black leading-tight text-[#20160f] sm:text-5xl">
+              <div
+                className={`mt-2 text-3xl font-black leading-tight sm:text-5xl ${
+                  snapshot?.room.status === "waiting"
+                    ? "inline-flex rounded-[24px] bg-[#1c4f73] px-5 py-3 text-[#fff7b3] shadow-[0_12px_30px_rgba(28,79,115,0.24)]"
+                    : "text-[#20160f]"
+                }`}
+              >
                 {snapshot?.room.status === "waiting"
                   ? code
                   : snapshot?.room.topic ?? "토론방 불러오는 중"}
               </div>
               {snapshot?.room.status === "waiting" ? (
-                <p className="mt-2 text-sm font-semibold text-[#9a5a17] sm:text-base">
+                <p className="mt-2 text-sm font-semibold text-[#126b84] sm:text-base">
                   메인 주제 · {snapshot.room.topic}
                 </p>
               ) : null}
             </div>
             <div className="mt-1 flex flex-wrap gap-2 text-xs font-semibold sm:text-sm">
               {snapshot ? (
-                <span className="rounded-full bg-[#fff2a5] px-3 py-2 text-[#7b4c0f]">
+                <span className="rounded-full bg-[#fff3a6] px-3 py-2 text-[#8d5800]">
                   {snapshot.room.participants.length}/{snapshot.room.participantsExpected}명
                 </span>
               ) : null}
               {snapshot ? (
-                <span className="rounded-full bg-[#ffe5cc] px-3 py-2 text-[#a05012]">
+                <span className="rounded-full bg-[#ffd2c2] px-3 py-2 text-[#ad3f36]">
                   {snapshot.room.status === "waiting" ? "대기실" : "토론 중"}
                 </span>
+              ) : null}
+              {snapshot?.room.status === "active" ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setShowRules((prev) => !prev)}
+                    className="rounded-full bg-[#14b8c9] px-3 py-2 text-white transition hover:bg-[#0f9cac]"
+                  >
+                    {showRules ? "규칙 닫기" : "규칙 보기"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowModeratorScript((prev) => !prev)}
+                    className="rounded-full bg-[#ff6f61] px-3 py-2 text-white transition hover:bg-[#eb5a4d]"
+                  >
+                    {showModeratorScript ? "사회자 닫기" : "사회자 보기"}
+                  </button>
+                </>
               ) : null}
             </div>
           </div>
 
-          <div className="mt-4 rounded-[24px] bg-[#20160f] px-4 py-4 text-[#fff6dc]">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#ffd447]">
+          <div className="mt-4 rounded-[24px] bg-[#1c4f73] px-4 py-4 text-[#f7fffe]">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#fff3a6]">
               {snapshot?.room.status === "waiting" ? "현재 상태" : "현재 토론주제"}
             </p>
             <h1 className="mt-2 text-xl font-bold leading-snug sm:text-2xl">
               {snapshot?.room.status === "waiting"
-                ? "모든 참가자가 입장하면 토론이 시작됩니다."
+                ? "참가자 기다리는 중"
                 : currentAgenda?.title ?? "소주제 준비 중"}
             </h1>
-            <div className="mt-4 rounded-[20px] bg-[#2b1f16] px-4 py-4">
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#ffd447]">
-                    AI 사회자
-                  </p>
-                  <p className="mt-2 text-base leading-7 sm:text-lg">
-                    {snapshot?.room.moderatorMessage ?? "진행 상황을 준비 중입니다."}
-                  </p>
-                </div>
-                {snapshot?.room.status === "active" ? (
-                  <button
-                    type="button"
-                    onClick={() => setShowRules((prev) => !prev)}
-                    className="shrink-0 rounded-full bg-[#ff8b2b] px-3 py-2 text-xs font-semibold text-white transition hover:bg-[#f07509]"
-                  >
-                    {showRules ? "규칙 닫기" : "규칙 보기"}
-                  </button>
-                ) : null}
+            {snapshot?.room.status === "waiting" ? (
+              <p className="mt-3 text-sm leading-6 text-[#dffcff] sm:text-base">
+                모두 입장하면 자동으로 토론이 시작됩니다.
+              </p>
+            ) : null}
+            {showModeratorScript && snapshot?.room.status === "active" ? (
+              <div className="mt-4 rounded-[20px] bg-[#eefcff] px-4 py-4 text-[#102a43]">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#126b84]">
+                  AI 사회자
+                </p>
+                <p className="mt-2 text-sm leading-7 sm:text-base">
+                  {snapshot?.room.moderatorMessage ?? "진행 상황을 준비 중입니다."}
+                </p>
               </div>
-              {showRules && snapshot?.room.status === "active" ? (
-                <div className="mt-4 rounded-[18px] bg-[#fff7df] px-4 py-3 text-[#20160f]">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#c16a16]">
+            ) : null}
+            {showRules && snapshot?.room.status === "active" ? (
+              <div className="mt-4 rounded-[20px] bg-[#fff9d6] px-4 py-4 text-[#20160f]">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8d5800]">
                     토론 규칙
-                  </p>
-                  <div className="mt-2 space-y-1 text-sm leading-6">
-                    <p>1. 발언 요청은 선착순입니다.</p>
-                    <p>2. 한 번에 한 사람만 말합니다.</p>
-                    <p>3. 발언이 끝나면 요청 큐는 초기화됩니다.</p>
-                    <p>4. 겹쳐 말하거나 목소리가 커지면 벌점이 쌓입니다.</p>
-                  </div>
+                </p>
+                <div className="mt-2 space-y-1 text-sm leading-6">
+                  <p>1. 발언 요청은 선착순입니다.</p>
+                  <p>2. 한 번에 한 사람만 말합니다.</p>
+                  <p>3. 발언이 끝나면 요청 큐는 초기화됩니다.</p>
+                  <p>4. 겹쳐 말하거나 목소리가 커지면 벌점이 쌓입니다.</p>
                 </div>
-              ) : null}
-            </div>
+              </div>
+            ) : null}
           </div>
         </section>
 
         {toastMessage ? (
-          <div className="rounded-[24px] border-2 border-[#ffab52] bg-[#fff0cc] px-4 py-4 text-center text-lg font-bold leading-7 text-[#8f4300] shadow-[0_12px_30px_rgba(255,139,43,0.18)]">
+          <div className="rounded-[24px] border-2 border-[#ff907f] bg-[#fff0ec] px-4 py-4 text-center text-lg font-bold leading-7 text-[#b33e31] shadow-[0_12px_30px_rgba(255,111,97,0.18)]">
             {toastMessage}
           </div>
         ) : null}
@@ -692,20 +721,14 @@ export function RoomClient({ code }: RoomClientProps) {
         ) : null}
 
         {snapshot?.room.status === "waiting" ? (
-          <section className="rounded-[30px] border border-white/70 bg-white/78 p-4 shadow-[0_18px_55px_rgba(255,152,44,0.12)] sm:p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c46d16]">
-              대기실
-            </p>
+          <section className="rounded-[30px] border border-white/70 bg-white/82 p-4 shadow-[0_18px_55px_rgba(19,116,160,0.12)] sm:p-5">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h2 className="mt-2 text-2xl font-semibold sm:text-3xl">
                   {snapshot.room.participants.length}명 모였어요
                 </h2>
-                <p className="mt-2 text-sm text-slate-700 sm:text-base">
-                  모두 입장하면 자동으로 토론이 시작됩니다.
-                </p>
               </div>
-              <div className="rounded-[22px] bg-[#fff2a5] px-4 py-4 text-center text-[#7b4c0f]">
+              <div className="rounded-[22px] bg-[#fff3a6] px-4 py-4 text-center text-[#8d5800]">
                 <p className="text-xs font-semibold uppercase tracking-[0.14em]">남은 인원</p>
                 <p className="mt-1 text-3xl font-black">
                   {Math.max(snapshot.room.participantsExpected - snapshot.room.participants.length, 0)}
@@ -717,10 +740,20 @@ export function RoomClient({ code }: RoomClientProps) {
               {snapshot.room.participants.map((participant) => (
                 <div
                   key={participant.id}
-                  className="rounded-[18px] bg-[#fff8df] px-3 py-3 text-sm font-semibold text-slate-800"
+                  className={`rounded-[18px] px-3 py-3 text-sm font-semibold text-slate-800 ${
+                    participant.isHost
+                      ? "bg-[linear-gradient(135deg,_#ff6f61,_#ffb347)] text-white"
+                      : "bg-[#eefcff]"
+                  }`}
                 >
-                  {participant.name}
-                  {participant.isHost ? " · 방장" : ""}
+                  <span className="flex items-center gap-2">
+                    <span>{participant.name}</span>
+                    {participant.isHost ? (
+                      <span className="rounded-full bg-white/22 px-2 py-1 text-[11px] uppercase tracking-[0.16em] text-white">
+                        방장
+                      </span>
+                    ) : null}
+                  </span>
                 </div>
               ))}
             </div>
@@ -729,7 +762,7 @@ export function RoomClient({ code }: RoomClientProps) {
               type="button"
               onClick={handleLeaveWaitingRoom}
               disabled={isPending}
-              className="mt-4 w-full rounded-full bg-[#20160f] px-4 py-3 text-sm font-semibold text-[#fff7d8] transition hover:bg-black disabled:opacity-50"
+              className="mt-4 w-full rounded-full bg-[#1c4f73] px-4 py-3 text-sm font-semibold text-[#f7fffe] transition hover:bg-[#143c57] disabled:opacity-50"
             >
               홈으로 돌아가기
             </button>
@@ -738,10 +771,10 @@ export function RoomClient({ code }: RoomClientProps) {
 
         {snapshot?.room.status === "active" ? (
           <section className="flex flex-col gap-3">
-            <div className="rounded-[30px] border border-white/70 bg-white/78 p-4 shadow-[0_18px_60px_rgba(255,150,36,0.14)] sm:p-5">
+            <div className="rounded-[30px] border border-white/70 bg-white/82 p-4 shadow-[0_18px_60px_rgba(19,116,160,0.14)] sm:p-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c16a16]">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#126b84]">
                     발언 상태
                   </p>
                   <h2 className="mt-2 text-2xl font-semibold sm:text-3xl">
@@ -755,7 +788,7 @@ export function RoomClient({ code }: RoomClientProps) {
                     시작 {formatTime(snapshot.room.turn.startedAt ?? null)}
                   </p>
                 </div>
-                <div className="rounded-[20px] bg-[#fff8df] px-4 py-3 text-sm font-semibold text-[#7b4c0f]">
+                <div className="rounded-[20px] bg-[#eefcff] px-4 py-3 text-sm font-semibold text-[#126b84]">
                   {snapshot.viewer.queuePosition
                     ? `내 순서 ${snapshot.viewer.queuePosition}번`
                     : "턴 종료 후 큐 초기화"}
@@ -768,8 +801,8 @@ export function RoomClient({ code }: RoomClientProps) {
                     key={participant.id}
                     className={`rounded-[20px] px-3 py-3 ${
                       participant.id === snapshot.viewer.participantId
-                        ? "bg-[linear-gradient(135deg,_#fff2a5,_#ffd8ab)]"
-                        : "bg-[#fff8e5]"
+                        ? "bg-[linear-gradient(135deg,_#fff3a6,_#8bf0ff)]"
+                        : "bg-[#eefcff]"
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2">
@@ -779,7 +812,7 @@ export function RoomClient({ code }: RoomClientProps) {
                           {participant.isHost ? "방장" : "참가자"} · {penaltyLabel(participant.score)}
                         </p>
                       </div>
-                      <div className="rounded-full bg-[#20160f] px-3 py-1.5 text-sm font-bold text-[#ffd447]">
+                      <div className="rounded-full bg-[#1c4f73] px-3 py-1.5 text-sm font-bold text-[#fff7b3]">
                         {participant.score}
                       </div>
                     </div>
@@ -796,7 +829,7 @@ export function RoomClient({ code }: RoomClientProps) {
                       participantId,
                     })
                   }
-                  className="rounded-full bg-[#ff8b2b] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#f07509] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="rounded-full bg-[#ff6f61] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#eb5a4d] disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   발언 요청
                 </button>
@@ -804,7 +837,7 @@ export function RoomClient({ code }: RoomClientProps) {
                   type="button"
                   disabled={isPending || !snapshot.viewer.canEndTurn}
                   onClick={handleEndTurn}
-                  className="rounded-full bg-[#fff2a5] px-4 py-3 text-sm font-semibold text-[#7b4c0f] transition hover:bg-[#ffe87b] disabled:cursor-not-allowed disabled:opacity-50 sm:col-span-3"
+                  className="rounded-full bg-[#14b8c9] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#0f9cac] disabled:cursor-not-allowed disabled:opacity-50 sm:col-span-3"
                 >
                   발언종료
                 </button>
@@ -819,7 +852,7 @@ export function RoomClient({ code }: RoomClientProps) {
                     })
                   }
                   disabled={isPending || isListeningSession}
-                  className="mt-3 w-full rounded-full bg-[#fff8df] px-4 py-3 text-sm font-semibold text-[#a05012] transition hover:bg-[#fff0c0] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="mt-3 w-full rounded-full bg-[#fff3a6] px-4 py-3 text-sm font-semibold text-[#8d5800] transition hover:bg-[#ffe976] disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   다음 소주제
                 </button>
@@ -834,29 +867,29 @@ export function RoomClient({ code }: RoomClientProps) {
                     })
                   }
                   disabled={isPending || isListeningSession}
-                  className="mt-3 w-full rounded-full bg-[#ff8b2b] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#f07509] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="mt-3 w-full rounded-full bg-[#ff6f61] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#eb5a4d] disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   토론 종료
                 </button>
               ) : null}
             </div>
 
-            <div className="rounded-[30px] border border-white/70 bg-white/78 p-4 shadow-[0_18px_60px_rgba(255,150,36,0.12)] sm:p-5">
+            <div className="rounded-[30px] border border-white/70 bg-white/82 p-4 shadow-[0_18px_60px_rgba(19,116,160,0.12)] sm:p-5">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c16a16]">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#126b84]">
                     마이크 / 기록
                   </p>
                   <h2 className="mt-2 text-2xl font-semibold">발언 캡처</h2>
                 </div>
-                <div className="rounded-full bg-[#fff2a5] px-3 py-2 text-sm font-semibold text-[#7b4c0f]">
+                <div className="rounded-full bg-[#fff3a6] px-3 py-2 text-sm font-semibold text-[#8d5800]">
                   {speechSupported ? "자동 마이크" : "음성 지원 필요"}
                 </div>
               </div>
 
               <div className="mt-4 grid gap-3 lg:grid-cols-[0.95fr_1.05fr]">
-                <div className="rounded-[24px] bg-[#20160f] p-4 text-[#fff6dc] lg:col-span-2">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#ffd447]">
+                <div className="rounded-[24px] bg-[#1c4f73] p-4 text-[#f7fffe] lg:col-span-2">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#fff3a6]">
                     실시간 문장
                   </p>
                   <p className="mt-3 min-h-24 text-sm leading-7 sm:text-base">
@@ -875,7 +908,7 @@ export function RoomClient({ code }: RoomClientProps) {
                   recentUtterances.map((utterance) => (
                     <article
                       key={utterance.id}
-                      className="rounded-[20px] bg-[#fff8e5] px-4 py-3"
+                      className="rounded-[20px] bg-[#eefcff] px-4 py-3"
                     >
                       <div className="flex items-center justify-between gap-3 text-xs text-slate-600 sm:text-sm">
                         <span className="font-semibold text-slate-900">{utterance.participantName}</span>
@@ -885,7 +918,7 @@ export function RoomClient({ code }: RoomClientProps) {
                     </article>
                   ))
                 ) : (
-                  <div className="rounded-[20px] border border-dashed border-[#ffd698] px-4 py-4 text-center text-sm text-slate-600">
+                  <div className="rounded-[20px] border border-dashed border-[#7ddfee] px-4 py-4 text-center text-sm text-slate-600">
                     최근 발언이 아직 없습니다.
                   </div>
                 )}
