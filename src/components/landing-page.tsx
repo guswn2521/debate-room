@@ -74,6 +74,7 @@ export function LandingPage() {
     <main className="flex min-h-screen items-center bg-[radial-gradient(circle_at_top,_rgba(255,226,87,0.64),_transparent_35%),linear-gradient(160deg,_#fff8d7_0%,_#ffe6b4_52%,_#ffd3a2_100%)] px-3 py-3 text-slate-900 sm:px-5">
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-3">
         <section className="rounded-[28px] border border-white/70 bg-white/72 px-4 py-4 shadow-[0_16px_48px_rgba(255,148,31,0.14)] backdrop-blur sm:px-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c46d16]">홈</p>
           <span className="inline-flex rounded-full bg-[#ff8b2b] px-3 py-1.5 text-xs font-semibold tracking-[0.18em] text-white uppercase">
             Debate Room
           </span>

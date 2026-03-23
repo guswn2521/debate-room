@@ -5,6 +5,7 @@ import {
   buildSegmentSummary,
   codeFromTopic,
   debateStartedPrompt,
+  debateStartedSpeech,
   idlePrompt,
   moderatorIntro,
   penaltyState,
@@ -127,6 +128,7 @@ function assignSpeaker(room: DebateRoom, participantId: string) {
     round: room.turn.round + 1,
   };
   room.moderatorMessage = speakerPrompt(room, participant.name);
+  room.moderatorSpeechMessage = room.moderatorMessage;
 
   if (participant.score >= 4) {
     participant.pendingBgmCue = crypto.randomUUID();
@@ -152,9 +154,11 @@ function syncWaitingState(room: DebateRoom) {
       room.startedAt = now();
     }
     room.moderatorMessage = debateStartedPrompt(room);
+    room.moderatorSpeechMessage = debateStartedSpeech(room);
   } else {
     room.status = "waiting";
     room.moderatorMessage = waitingPrompt(joined, room.participantsExpected);
+    room.moderatorSpeechMessage = room.moderatorMessage;
   }
 }
 
@@ -226,6 +230,7 @@ export function createRoom(input: CreateRoomInput) {
     updatedAt: now(),
     version: 1,
     moderatorMessage: moderatorIntro(input.topic.trim(), input.participantCount),
+    moderatorSpeechMessage: moderatorIntro(input.topic.trim(), input.participantCount),
     agenda: buildAgenda(input.topic.trim()),
     currentAgendaIndex: 0,
     participants: [
@@ -414,6 +419,7 @@ export function endTurn(code: string, participantId: string) {
   }
 
   room.moderatorMessage = idlePrompt(room);
+  room.moderatorSpeechMessage = room.moderatorMessage;
   clearRaiseQueue(room);
 
   return serialize(room, participantId);
@@ -444,6 +450,7 @@ export function advanceAgenda(code: string, participantId: string) {
     room.raiseQueue = [];
     completeAgenda(room);
     room.moderatorMessage = agendaAdvancedPrompt(room);
+    room.moderatorSpeechMessage = room.moderatorMessage;
     touch(room);
   }
 
@@ -486,6 +493,7 @@ export function endDebate(code: string, participantId: string) {
     createdAt: now(),
   });
   room.moderatorMessage = "오늘 토론이 종료되었습니다. 정리본을 확인하고 다음 대화에 이어가면 됩니다.";
+  room.moderatorSpeechMessage = room.moderatorMessage;
   room.participants = room.participants.map((entry) => ({
     ...entry,
     pendingBgmCue: null,
