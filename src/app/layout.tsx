@@ -1,5 +1,18 @@
 import type { Metadata } from "next";
+import { IBM_Plex_Sans_KR, Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
+
+const ibm = IBM_Plex_Sans_KR({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-display",
+});
+
+const noto = Noto_Sans_KR({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-body",
+});
 
 export const metadata: Metadata = {
   title: "가족 토론방",
@@ -12,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className="h-full antialiased">
+    <html lang="ko" className={`${ibm.variable} ${noto.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
