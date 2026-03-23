@@ -1,19 +1,9 @@
 import Link from "next/link";
-import {
-  Gowun_Dodum,
-  IBM_Plex_Sans_KR,
-  Nanum_Myeongjo,
-  Noto_Sans_KR,
-} from "next/font/google";
+import { Gowun_Dodum, IBM_Plex_Sans_KR, Noto_Sans_KR } from "next/font/google";
 
 const notoSans = Noto_Sans_KR({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
-});
-
-const nanumMyeongjo = Nanum_Myeongjo({
-  subsets: ["latin"],
-  weight: ["400", "700", "800"],
 });
 
 const ibmPlex = IBM_Plex_Sans_KR({
@@ -32,111 +22,109 @@ type Theme = {
   tagline: string;
   mood: string;
   why: string;
-  layoutPoint: string;
   palette: string[];
-  shellClass: string;
   pageClass: string;
-  cardClass: string;
-  softCardClass: string;
+  frameClass: string;
+  panelClass: string;
   heroClass: string;
-  heroTitleClass: string;
-  heroBodyClass: string;
-  headingClass: string;
+  heroTopClass: string;
+  titleClass: string;
   bodyClass: string;
-  badgeClass: string;
-  hostTagClass: string;
-  primaryButtonClass: string;
-  secondaryButtonClass: string;
+  subtleTextClass: string;
+  chipClass: string;
+  railWrapClass: string;
   railActiveClass: string;
-  railDoneClass: string;
   railIdleClass: string;
-  variant: "editorial" | "signal" | "family";
+  hostTagClass: string;
+  buttonPrimaryClass: string;
+  buttonSecondaryClass: string;
+  buttonGhostClass: string;
 };
 
 const themes: Theme[] = [
   {
     id: "1안",
-    name: "Editorial Hearth",
-    tagline: "따뜻하고 정돈된 가족 회의록",
-    mood: "1안의 통일감은 유지하면서도, 메인 주제만큼은 더 강하게 읽히게 조정한 방향입니다.",
-    why: "차분한 분위기와 높은 가독성을 동시에 잡기 좋아서, 가족 토론 서비스에 가장 안정적으로 맞습니다.",
-    layoutPoint:
-      "얇은 진행바 아래에 짙은 메인 주제 카드가 먼저 나오고, 참가자와 버튼은 밝은 카드로 내려 위계를 분명하게 나눕니다.",
-    palette: ["#F7F1E8", "#FFFDF8", "#8B5E3C", "#2C3E50"],
-    shellClass: "border-[#e3d7c8] bg-[#fffdf8]",
+    name: "Bright Ledger",
+    tagline: "정돈된 1안 구조에 선명한 코랄과 코발트를 입힌 버전",
+    mood: "가장 안정적인 구조를 유지하면서, 갈색과 남색의 무거움을 덜어 더 밝고 현대적으로 보이게 만든 안입니다.",
+    why: "메인 주제는 또렷하고, 전체 인상은 깔끔하며, 색감은 생기가 있어서 현재 피드백에 가장 직접적으로 맞는 방향입니다.",
+    palette: ["#FFF8EF", "#FFFFFF", "#FF7A59", "#4F5DFF"],
     pageClass:
-      "bg-[radial-gradient(circle_at_top,_rgba(139,94,60,0.10),_transparent_34%),linear-gradient(180deg,_#fcf7f0_0%,_#f6eee1_100%)]",
-    cardClass: "border-[#e3d7c8] bg-[#fffaf4] shadow-[0_20px_50px_rgba(52,38,30,0.08)]",
-    softCardClass: "border-[#eadfd2] bg-[#fffdf8]",
-    heroClass: "border-[#2c3e50] bg-[#2c3e50]",
-    heroTitleClass: `${nanumMyeongjo.className} text-white`,
-    heroBodyClass: `${notoSans.className} text-[#ecdfd3]`,
-    headingClass: `${nanumMyeongjo.className} text-[#332821]`,
-    bodyClass: `${notoSans.className} text-[#625247]`,
-    badgeClass: "bg-[#efe3d6] text-[#7b614e]",
-    hostTagClass: "bg-[#fff2e5] text-[#8b5e3c] ring-1 ring-[#d9b28b]",
-    primaryButtonClass: "bg-[#8b5e3c] text-white hover:bg-[#744e32]",
-    secondaryButtonClass: "bg-[#2c3e50] text-white hover:bg-[#243342]",
-    railActiveClass: "bg-[#2c3e50] text-white",
-    railDoneClass: "bg-[#e8d5c2] text-[#775746]",
-    railIdleClass: "bg-transparent text-[#9f8a78]",
-    variant: "editorial",
+      "bg-[radial-gradient(circle_at_top,_rgba(255,122,89,0.11),_transparent_34%),linear-gradient(180deg,_#fffaf3_0%,_#f6f4ff_100%)]",
+    frameClass: "border-[#eadfd7] bg-[#fffdf9]",
+    panelClass: "border-[#eadfd7] bg-white shadow-[0_18px_46px_rgba(50,36,31,0.07)]",
+    heroClass: "border-[#dfe2ff] bg-[#eef1ff]",
+    heroTopClass: "bg-[#4f5dff]",
+    titleClass: `${ibmPlex.className} text-[#1f2440]`,
+    bodyClass: `${notoSans.className} text-[#594f48]`,
+    subtleTextClass: "text-[#8f7d71]",
+    chipClass: "bg-[#fff0ea] text-[#c95d42]",
+    railWrapClass: "bg-[#f1ece4]",
+    railActiveClass: "bg-[#4f5dff] text-white",
+    railIdleClass: "bg-transparent text-[#aaa093]",
+    hostTagClass: "bg-[#eef1ff] text-[#4f5dff] ring-1 ring-[#cdd3ff]",
+    buttonPrimaryClass:
+      "bg-[#ff7a59] text-white shadow-[0_8px_0_rgba(207,92,61,0.95)] hover:-translate-y-0.5 active:translate-y-[2px] active:shadow-[0_4px_0_rgba(207,92,61,0.95)]",
+    buttonSecondaryClass:
+      "bg-[#4f5dff] text-white shadow-[0_8px_0_rgba(61,73,210,0.95)] hover:-translate-y-0.5 active:translate-y-[2px] active:shadow-[0_4px_0_rgba(61,73,210,0.95)]",
+    buttonGhostClass:
+      "bg-[#fff6f0] text-[#c95d42] shadow-[0_8px_0_rgba(239,219,211,1)] hover:-translate-y-0.5 active:translate-y-[2px] active:shadow-[0_4px_0_rgba(239,219,211,1)]",
   },
   {
     id: "2안",
-    name: "Calm Signal",
-    tagline: "깔끔하지만 차갑지 않은 제품 톤",
-    mood: "2안의 정돈감은 유지하고, 차갑고 칙칙한 인상을 줄이기 위해 따뜻한 클레이 포인트를 섞었습니다.",
-    why: "상태 전환이 많은 앱에서 가장 명확한 구조를 만들면서도, 지나치게 건조해 보이지 않게 잡은 방향입니다.",
-    layoutPoint:
-      "상단 상태와 주제를 분리하고, 메인 주제는 흰 배경 카드에 컬러 라인과 큰 제목으로 강조합니다. 버튼은 하나의 강한 주색으로 정리합니다.",
-    palette: ["#F4F7F6", "#FFFFFF", "#2F7D73", "#E79A63"],
-    shellClass: "border-[#d8e2dd] bg-[#fbfefd]",
+    name: "Soft Signal",
+    tagline: "2안의 정돈감을 살리고 체온을 더한 민트-애프리콧 버전",
+    mood: "2안처럼 깔끔하고 제품답지만, 차갑고 칙칙한 느낌을 줄이기 위해 민트와 애프리콧을 섞어 더 부드럽게 정리한 안입니다.",
+    why: "화면 구성은 제일 프로덕트스럽고, 색만 따뜻하게 다듬어서 정보 정리가 잘 되면서도 딱딱하지 않습니다.",
+    palette: ["#F5FBF8", "#FFFFFF", "#2FA38A", "#FF9A6C"],
     pageClass:
-      "bg-[radial-gradient(circle_at_top,_rgba(47,125,115,0.10),_transparent_34%),linear-gradient(180deg,_#f7faf9_0%,_#eff5f3_100%)]",
-    cardClass: "border-[#d6e2dc] bg-white shadow-[0_18px_46px_rgba(28,57,53,0.08)]",
-    softCardClass: "border-[#dce7e1] bg-[#fbfefd]",
-    heroClass: "border-[#d7e4de] bg-white",
-    heroTitleClass: `${ibmPlex.className} text-[#1f3537]`,
-    heroBodyClass: `${notoSans.className} text-[#5d726d]`,
-    headingClass: `${ibmPlex.className} text-[#203739]`,
-    bodyClass: `${notoSans.className} text-[#60736e]`,
-    badgeClass: "bg-[#e6f1ed] text-[#326b65]",
-    hostTagClass: "bg-[#edf8f5] text-[#2f7d73] ring-1 ring-[#98d0c4]",
-    primaryButtonClass: "bg-[#2f7d73] text-white hover:bg-[#27675f]",
-    secondaryButtonClass: "bg-[#fff1e6] text-[#b16032] hover:bg-[#fde7d8]",
-    railActiveClass: "bg-[#2f7d73] text-white",
-    railDoneClass: "bg-[#dff0eb] text-[#326b65]",
-    railIdleClass: "bg-transparent text-[#92a49d]",
-    variant: "signal",
+      "bg-[radial-gradient(circle_at_top,_rgba(47,163,138,0.12),_transparent_34%),linear-gradient(180deg,_#f7fcfa_0%,_#f3f8f6_100%)]",
+    frameClass: "border-[#d9e6e0] bg-[#fbfffd]",
+    panelClass: "border-[#d6e4de] bg-white shadow-[0_18px_46px_rgba(27,55,49,0.07)]",
+    heroClass: "border-[#d9ece7] bg-[#f5fbf8]",
+    heroTopClass: "bg-[#2fa38a]",
+    titleClass: `${ibmPlex.className} text-[#1f3733]`,
+    bodyClass: `${notoSans.className} text-[#57706a]`,
+    subtleTextClass: "text-[#8ca099]",
+    chipClass: "bg-[#fff1e7] text-[#c06d45]",
+    railWrapClass: "bg-[#ebf1ee]",
+    railActiveClass: "bg-[#2fa38a] text-white",
+    railIdleClass: "bg-transparent text-[#9aaea7]",
+    hostTagClass: "bg-[#ebfbf7] text-[#2fa38a] ring-1 ring-[#b6e3d8]",
+    buttonPrimaryClass:
+      "bg-[#2fa38a] text-white shadow-[0_8px_0_rgba(35,126,107,0.95)] hover:-translate-y-0.5 active:translate-y-[2px] active:shadow-[0_4px_0_rgba(35,126,107,0.95)]",
+    buttonSecondaryClass:
+      "bg-[#ff9a6c] text-white shadow-[0_8px_0_rgba(213,117,76,0.95)] hover:-translate-y-0.5 active:translate-y-[2px] active:shadow-[0_4px_0_rgba(213,117,76,0.95)]",
+    buttonGhostClass:
+      "bg-[#f4faf7] text-[#2f7a70] shadow-[0_8px_0_rgba(217,231,226,1)] hover:-translate-y-0.5 active:translate-y-[2px] active:shadow-[0_4px_0_rgba(217,231,226,1)]",
   },
   {
     id: "3안",
-    name: "Studio Family",
-    tagline: "친근하지만 지금 앱다운 온기",
-    mood: "3안의 친근함을 유지하되, 색의 채도와 정렬감을 다듬어 옛날 앱처럼 보이지 않게 만든 방향입니다.",
-    why: "가족용 서비스의 편안함이 느껴지면서도, 요즘 라이프스타일 앱처럼 밝고 세련된 인상을 줍니다.",
-    layoutPoint:
-      "메인 주제는 밝은 배경 위 큰 제목으로 띄우고, 참가자 카드는 부드러운 색 블록으로 구분합니다. 버튼은 코랄과 인디고 두 축만 사용합니다.",
-    palette: ["#FFF6EE", "#FFE0D2", "#D95C7A", "#5563D6"],
-    shellClass: "border-[#f0d7d1] bg-[#fffdfb]",
+    name: "Rosy Current",
+    tagline: "1안 구조를 유지하되 더 밝고 세련된 라이프스타일 톤으로 다듬은 버전",
+    mood: "친근함은 살리되 아마추어 느낌은 덜고, 화사한 로즈와 인디고를 균형 있게 사용한 안입니다.",
+    why: "밝고 부드러우면서도 촌스럽지 않아서, 가족 서비스의 온기를 유지하며 좀 더 요즘 앱처럼 보이게 합니다.",
+    palette: ["#FFF7F3", "#FFFFFF", "#F06F8D", "#5D67E8"],
     pageClass:
-      "bg-[radial-gradient(circle_at_top,_rgba(217,92,122,0.11),_transparent_34%),linear-gradient(180deg,_#fff9f5_0%,_#fff2ea_100%)]",
-    cardClass: "border-[#f0dad5] bg-[#fffdfb] shadow-[0_18px_46px_rgba(74,41,53,0.08)]",
-    softCardClass: "border-[#f0ddda] bg-[#fff7f2]",
-    heroClass: "border-[#f3d6cd] bg-[#fff1ea]",
-    heroTitleClass: `${gowunDodum.className} font-bold text-[#3d2b35]`,
-    heroBodyClass: `${notoSans.className} text-[#795e67]`,
-    headingClass: `${gowunDodum.className} font-bold text-[#412f39]`,
-    bodyClass: `${notoSans.className} text-[#735f67]`,
-    badgeClass: "bg-[#ffe4dd] text-[#b44d66]",
-    hostTagClass: "bg-[#eef0ff] text-[#5563d6] ring-1 ring-[#b4bdf3]",
-    primaryButtonClass: "bg-[#d95c7a] text-white hover:bg-[#c44d69]",
-    secondaryButtonClass: "bg-[#5563d6] text-white hover:bg-[#4452c0]",
-    railActiveClass: "bg-[#5563d6] text-white",
-    railDoneClass: "bg-[#ffe1d7] text-[#b2576c]",
-    railIdleClass: "bg-transparent text-[#b1979d]",
-    variant: "family",
+      "bg-[radial-gradient(circle_at_top,_rgba(240,111,141,0.11),_transparent_34%),linear-gradient(180deg,_#fffaf7_0%,_#f7f4ff_100%)]",
+    frameClass: "border-[#eedfdd] bg-[#fffdfb]",
+    panelClass: "border-[#eedddb] bg-white shadow-[0_18px_46px_rgba(70,43,55,0.07)]",
+    heroClass: "border-[#e7e3ff] bg-[#f3f1ff]",
+    heroTopClass: "bg-[#5d67e8]",
+    titleClass: `${gowunDodum.className} font-bold text-[#2f2741]`,
+    bodyClass: `${notoSans.className} text-[#6a5b63]`,
+    subtleTextClass: "text-[#a08f97]",
+    chipClass: "bg-[#ffe8ef] text-[#c95778]",
+    railWrapClass: "bg-[#f2ecef]",
+    railActiveClass: "bg-[#5d67e8] text-white",
+    railIdleClass: "bg-transparent text-[#aa9ca3]",
+    hostTagClass: "bg-[#eef0ff] text-[#5d67e8] ring-1 ring-[#cfd4ff]",
+    buttonPrimaryClass:
+      "bg-[#f06f8d] text-white shadow-[0_8px_0_rgba(205,86,118,0.95)] hover:-translate-y-0.5 active:translate-y-[2px] active:shadow-[0_4px_0_rgba(205,86,118,0.95)]",
+    buttonSecondaryClass:
+      "bg-[#5d67e8] text-white shadow-[0_8px_0_rgba(72,81,196,0.95)] hover:-translate-y-0.5 active:translate-y-[2px] active:shadow-[0_4px_0_rgba(72,81,196,0.95)]",
+    buttonGhostClass:
+      "bg-[#fff4f7] text-[#c95778] shadow-[0_8px_0_rgba(239,221,226,1)] hover:-translate-y-0.5 active:translate-y-[2px] active:shadow-[0_4px_0_rgba(239,221,226,1)]",
   },
 ];
 
@@ -150,17 +138,13 @@ const participants = [
 
 function ProgressRail({ theme }: { theme: Theme }) {
   return (
-    <div className={`rounded-[18px] p-1 ${theme.badgeClass}`}>
+    <div className={`rounded-[18px] p-1 ${theme.railWrapClass}`}>
       <div className="grid grid-cols-4 gap-1">
         {steps.map((step, index) => (
           <div
             key={step}
             className={`rounded-full px-2 py-2 text-center text-[11px] font-semibold sm:text-xs ${
-              index === 2
-                ? theme.railActiveClass
-                : index < 2
-                  ? theme.railDoneClass
-                  : theme.railIdleClass
+              index === 2 ? theme.railActiveClass : theme.railIdleClass
             }`}
           >
             {step}
@@ -171,42 +155,55 @@ function ProgressRail({ theme }: { theme: Theme }) {
   );
 }
 
-function EditorialPhone({ theme }: { theme: Theme }) {
+function SharedPhone({ theme }: { theme: Theme }) {
   return (
-    <div className={`rounded-[34px] border p-3 sm:p-4 ${theme.shellClass}`}>
+    <div className={`rounded-[34px] border p-3 sm:p-4 ${theme.frameClass}`}>
       <div className="mx-auto max-w-sm">
         <ProgressRail theme={theme} />
 
         <div className={`mt-3 rounded-[28px] border p-5 ${theme.heroClass}`}>
-          <p className={`text-[11px] uppercase tracking-[0.2em] ${theme.heroBodyClass}`}>
+          <div className={`h-2.5 w-24 rounded-full ${theme.heroTopClass}`} />
+          <p className={`mt-4 text-[11px] font-semibold uppercase tracking-[0.2em] ${theme.subtleTextClass}`}>
             메인 주제
           </p>
-          <h3 className={`mt-3 text-[30px] leading-tight ${theme.heroTitleClass}`}>
+          <h3 className={`mt-3 text-[30px] leading-tight ${theme.titleClass}`}>
             우리 가족 여행 예산을 어떻게 정할까?
           </h3>
-          <p className={`mt-4 text-sm ${theme.heroBodyClass}`}>
+          <p className={`mt-4 text-sm leading-7 ${theme.bodyClass}`}>
             현재 소주제: 기대하는 점과 걱정되는 점
           </p>
+
+          <div className="mt-4 flex flex-wrap gap-2">
+            <span className={`rounded-full px-3 py-1.5 text-xs font-semibold ${theme.chipClass}`}>
+              지금 발언자 아빠
+            </span>
+            <span className={`rounded-full px-3 py-1.5 text-xs font-semibold ${theme.chipClass}`}>
+              4명 참여 중
+            </span>
+          </div>
         </div>
 
-        <div className={`mt-3 rounded-[26px] border p-4 ${theme.softCardClass}`}>
+        <div className={`mt-3 rounded-[26px] border p-4 ${theme.panelClass}`}>
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className={`text-xs font-semibold uppercase tracking-[0.18em] ${theme.bodyClass}`}>
+              <p className={`text-xs font-semibold uppercase tracking-[0.18em] ${theme.subtleTextClass}`}>
                 참가자
               </p>
-              <p className={`mt-1 text-lg ${theme.headingClass}`}>4명 참여 중</p>
+              <p className={`mt-1 text-lg ${theme.titleClass}`}>발언 순서 대기 가능</p>
             </div>
-            <div className={`rounded-full px-3 py-1.5 text-xs font-semibold ${theme.badgeClass}`}>
-              발언 요청 중
-            </div>
+            <button
+              type="button"
+              className={`rounded-full px-3 py-2 text-xs font-semibold transition ${theme.buttonGhostClass}`}
+            >
+              사회자 보기
+            </button>
           </div>
 
           <div className="mt-3 space-y-2">
             {participants.map((participant) => (
               <div
                 key={participant.name}
-                className={`flex items-center justify-between rounded-[18px] border px-3 py-3 ${theme.softCardClass}`}
+                className={`flex items-center justify-between rounded-[18px] border px-3 py-3 ${theme.panelClass}`}
               >
                 <div className="flex items-center gap-2">
                   {participant.host ? (
@@ -214,25 +211,25 @@ function EditorialPhone({ theme }: { theme: Theme }) {
                       방장
                     </span>
                   ) : null}
-                  <span className={`text-sm font-semibold ${theme.headingClass}`}>{participant.name}</span>
+                  <span className={`text-sm font-semibold ${theme.titleClass}`}>{participant.name}</span>
                 </div>
-                <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${theme.badgeClass}`}>
+                <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${theme.chipClass}`}>
                   벌점 {participant.score}
                 </span>
               </div>
             ))}
           </div>
 
-          <div className="mt-3 grid grid-cols-2 gap-2">
+          <div className="mt-4 grid grid-cols-2 gap-3">
             <button
               type="button"
-              className={`rounded-full px-4 py-3 text-sm font-semibold transition ${theme.primaryButtonClass}`}
+              className={`rounded-full px-4 py-3 text-sm font-semibold transition ${theme.buttonPrimaryClass}`}
             >
               발언 요청
             </button>
             <button
               type="button"
-              className={`rounded-full px-4 py-3 text-sm font-semibold transition ${theme.secondaryButtonClass}`}
+              className={`rounded-full px-4 py-3 text-sm font-semibold transition ${theme.buttonSecondaryClass}`}
             >
               규칙 보기
             </button>
@@ -243,194 +240,43 @@ function EditorialPhone({ theme }: { theme: Theme }) {
   );
 }
 
-function SignalPhone({ theme }: { theme: Theme }) {
-  return (
-    <div className={`rounded-[34px] border p-3 sm:p-4 ${theme.shellClass}`}>
-      <div className="mx-auto max-w-sm">
-        <ProgressRail theme={theme} />
-
-        <div className="mt-3 grid grid-cols-[1fr_auto] gap-2">
-          <div className={`rounded-[20px] px-3 py-2 text-xs font-semibold ${theme.badgeClass}`}>
-            토론방 · 4명 입장
-          </div>
-          <div className={`rounded-[20px] px-3 py-2 text-xs font-semibold ${theme.badgeClass}`}>
-            내 차례 아님
-          </div>
-        </div>
-
-        <div className={`mt-3 rounded-[26px] border p-4 ${theme.heroClass}`}>
-          <div className="flex items-start gap-3">
-            <div className="mt-1 h-16 w-1.5 rounded-full bg-[#e79a63]" />
-            <div className="min-w-0">
-              <p className={`text-[11px] uppercase tracking-[0.2em] ${theme.heroBodyClass}`}>
-                메인 주제
-              </p>
-              <h3 className={`mt-2 text-[28px] leading-tight ${theme.heroTitleClass}`}>
-                우리 가족 여행 예산을 어떻게 정할까?
-              </h3>
-              <p className={`mt-3 text-sm ${theme.heroBodyClass}`}>
-                현재 소주제: 기대하는 점과 걱정되는 점
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className={`mt-3 rounded-[26px] border p-4 ${theme.softCardClass}`}>
-          <p className={`text-xs font-semibold uppercase tracking-[0.18em] ${theme.bodyClass}`}>
-            참가자
-          </p>
-          <div className="mt-3 space-y-3">
-            {participants.map((participant) => (
-              <div
-                key={participant.name}
-                className={`flex items-center justify-between border-b pb-3 last:border-b-0 last:pb-0 ${theme.bodyClass}`}
-              >
-                <div className="flex items-center gap-2">
-                  {participant.host ? (
-                    <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${theme.hostTagClass}`}>
-                      방장
-                    </span>
-                  ) : null}
-                  <span className={`text-sm font-semibold ${theme.headingClass}`}>{participant.name}</span>
-                </div>
-                <span className="text-xs font-semibold">벌점 {participant.score}</span>
-              </div>
-            ))}
-          </div>
-
-          <button
-            type="button"
-            className={`mt-4 w-full rounded-full px-4 py-3 text-sm font-semibold transition ${theme.primaryButtonClass}`}
-          >
-            발언 요청
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function FamilyPhone({ theme }: { theme: Theme }) {
-  return (
-    <div className={`rounded-[34px] border p-3 sm:p-4 ${theme.shellClass}`}>
-      <div className="mx-auto max-w-sm">
-        <ProgressRail theme={theme} />
-
-        <div className={`mt-3 rounded-[28px] border p-5 ${theme.heroClass}`}>
-          <p className={`text-[11px] uppercase tracking-[0.2em] ${theme.heroBodyClass}`}>
-            메인 주제
-          </p>
-          <h3 className={`mt-2 text-[30px] leading-tight ${theme.heroTitleClass}`}>
-            우리 가족 여행 예산을 어떻게 정할까?
-          </h3>
-          <div className="mt-4 flex flex-wrap gap-2">
-            <span className={`rounded-full px-3 py-1.5 text-xs font-semibold ${theme.badgeClass}`}>
-              소주제 진행 중
-            </span>
-            <span className={`rounded-full px-3 py-1.5 text-xs font-semibold ${theme.badgeClass}`}>
-              지금 발언자 아빠
-            </span>
-          </div>
-        </div>
-
-        <div className="mt-3 grid gap-2">
-          {participants.map((participant, index) => (
-            <div
-              key={participant.name}
-              className={`flex items-center justify-between rounded-[20px] border px-3 py-3 ${
-                index % 2 === 0 ? theme.softCardClass : theme.badgeClass
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                {participant.host ? (
-                  <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${theme.hostTagClass}`}>
-                    방장
-                  </span>
-                ) : null}
-                <span className={`text-sm font-semibold ${theme.headingClass}`}>{participant.name}</span>
-              </div>
-              <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${theme.badgeClass}`}>
-                벌점 {participant.score}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-3 grid grid-cols-2 gap-2">
-          <button
-            type="button"
-            className={`rounded-full px-4 py-3 text-sm font-semibold transition ${theme.primaryButtonClass}`}
-          >
-            발언 요청
-          </button>
-          <button
-            type="button"
-            className={`rounded-full px-4 py-3 text-sm font-semibold transition ${theme.secondaryButtonClass}`}
-          >
-            사회자 보기
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function PhonePreview({ theme }: { theme: Theme }) {
-  if (theme.variant === "editorial") {
-    return <EditorialPhone theme={theme} />;
-  }
-
-  if (theme.variant === "signal") {
-    return <SignalPhone theme={theme} />;
-  }
-
-  return <FamilyPhone theme={theme} />;
-}
-
 function PreviewCard({ theme }: { theme: Theme }) {
   return (
-    <article className={`rounded-[34px] border p-4 sm:p-5 ${theme.cardClass}`}>
+    <article className={`rounded-[34px] border p-4 sm:p-5 ${theme.panelClass}`}>
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className={`text-xs font-semibold uppercase tracking-[0.22em] ${theme.bodyClass}`}>
+          <p className={`text-xs font-semibold uppercase tracking-[0.22em] ${theme.subtleTextClass}`}>
             {theme.id}
           </p>
-          <h2 className={`mt-2 text-3xl leading-none ${theme.headingClass}`}>{theme.name}</h2>
+          <h2 className={`mt-2 text-3xl leading-none ${theme.titleClass}`}>{theme.name}</h2>
           <p className={`mt-2 text-sm font-medium ${theme.bodyClass}`}>{theme.tagline}</p>
         </div>
-        <div className={`rounded-full px-3 py-1 text-xs font-semibold ${theme.badgeClass}`}>
-          새 샘플
+        <div className={`rounded-full px-3 py-1 text-xs font-semibold ${theme.chipClass}`}>
+          1안 구조 기반
         </div>
       </div>
 
-      <div className="mt-5 grid gap-5 xl:grid-cols-[0.92fr_1.08fr]">
+      <div className="mt-5 grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
         <div>
-          <div className={`rounded-[24px] border px-4 py-4 ${theme.softCardClass}`}>
-            <p className={`text-xs font-semibold uppercase tracking-[0.18em] ${theme.bodyClass}`}>
-              핵심 무드
+          <div className={`rounded-[24px] border px-4 py-4 ${theme.panelClass}`}>
+            <p className={`text-xs font-semibold uppercase tracking-[0.18em] ${theme.subtleTextClass}`}>
+              방향
             </p>
             <p className={`mt-2 text-sm leading-7 ${theme.bodyClass}`}>{theme.mood}</p>
           </div>
 
-          <div className={`mt-3 rounded-[24px] border px-4 py-4 ${theme.softCardClass}`}>
-            <p className={`text-xs font-semibold uppercase tracking-[0.18em] ${theme.bodyClass}`}>
-              왜 더 나은지
+          <div className={`mt-3 rounded-[24px] border px-4 py-4 ${theme.panelClass}`}>
+            <p className={`text-xs font-semibold uppercase tracking-[0.18em] ${theme.subtleTextClass}`}>
+              왜 괜찮은지
             </p>
             <p className={`mt-2 text-sm leading-7 ${theme.bodyClass}`}>{theme.why}</p>
-          </div>
-
-          <div className={`mt-3 rounded-[24px] border px-4 py-4 ${theme.softCardClass}`}>
-            <p className={`text-xs font-semibold uppercase tracking-[0.18em] ${theme.bodyClass}`}>
-              레이아웃 포인트
-            </p>
-            <p className={`mt-2 text-sm leading-7 ${theme.bodyClass}`}>{theme.layoutPoint}</p>
           </div>
 
           <div className="mt-3 flex flex-wrap gap-2">
             {theme.palette.map((color) => (
               <span
                 key={color}
-                className={`rounded-full px-3 py-1.5 text-xs font-semibold ${theme.badgeClass}`}
+                className={`rounded-full px-3 py-1.5 text-xs font-semibold ${theme.chipClass}`}
               >
                 {color}
               </span>
@@ -438,7 +284,7 @@ function PreviewCard({ theme }: { theme: Theme }) {
           </div>
         </div>
 
-        <PhonePreview theme={theme} />
+        <SharedPhone theme={theme} />
       </div>
     </article>
   );
@@ -454,12 +300,12 @@ export function DesignLab() {
               Design Lab
             </p>
             <h1 className="mt-2 text-3xl font-semibold leading-tight text-[#1e1b18] sm:text-5xl">
-              가족 토론방 리디자인 샘플 3안
+              1안 구조 기반 리파인 샘플 3안
             </h1>
             <p className="mt-3 max-w-3xl text-sm leading-7 text-[#5c544a] sm:text-base">
-              이전 피드백을 반영해 메인 주제 가독성과 전체 구조를 먼저 다시 잡았습니다.
-              이번 샘플은 색만 바꾼 버전이 아니라, 전문 디자이너처럼 위계와 레이아웃까지
-              함께 다듬은 비교안입니다.
+              좋아하신 1안의 구조는 유지하고, 색과 폰트만 더 밝고 세련되게 다듬었습니다.
+              진행바는 현재 단계만 활성화되도록 바꿨고, 버튼도 눌렀을 때 손맛이 느껴지도록
+              입체감과 그림자를 추가했습니다.
             </p>
           </div>
 
@@ -480,11 +326,11 @@ export function DesignLab() {
         </div>
 
         <section className="mt-6 rounded-[28px] border border-[#e5d9c8] bg-white/92 p-5 shadow-[0_16px_42px_rgba(20,33,61,0.06)]">
-          <p className="text-sm font-semibold text-[#4f443b]">선택 가이드</p>
+          <p className="text-sm font-semibold text-[#4f443b]">빠른 선택 가이드</p>
           <div className="mt-3 space-y-2 text-sm leading-7 text-[#655b52]">
-            <p>1안: 가장 안정적이고 오래 써도 질리지 않는 회의형 분위기입니다.</p>
-            <p>2안: 가장 제품답고 정돈됐지만, 이번엔 따뜻함을 더 넣어 차가움을 줄였습니다.</p>
-            <p>3안: 가장 친근하고 밝지만, 이전보다 더 세련된 비율과 색으로 다듬었습니다.</p>
+            <p>1안: 가장 균형이 좋고, 지금 피드백에 가장 가깝게 정리된 메인 후보입니다.</p>
+            <p>2안: 더 제품답고 깔끔한 인상이 강한 후보입니다.</p>
+            <p>3안: 밝고 친근하지만 여전히 세련된 분위기를 원하는 경우에 맞습니다.</p>
           </div>
         </section>
       </div>
