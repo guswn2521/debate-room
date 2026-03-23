@@ -2,7 +2,7 @@
 
 import type { RoomSnapshot } from "@/lib/debate-types";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { useEffect, useEffectEvent, useMemo, useRef, useState, useTransition } from "react";
 
 type RoomClientProps = {
   code: string;
@@ -107,17 +107,18 @@ export function RoomClient({ code }: RoomClientProps) {
   const participantId = searchParams.get("participant") ?? "";
   const [snapshot, setSnapshot] = useState<RoomSnapshot | null>(null);
   const [error, setError] = useState("");
-  const [manualTranscript, setManualTranscript] = useState("");
   const [liveTranscript, setLiveTranscript] = useState("");
   const [toastMessage, setToastMessage] = useState("");
   const [speechSupported, setSpeechSupported] = useState(false);
   const [isListeningSession, setIsListeningSession] = useState(false);
+  const [showRules, setShowRules] = useState(false);
   const [speechSuppressedWhileSpeaking, setSpeechSuppressedWhileSpeaking] =
     useState(false);
   const [isPending, startTransition] = useTransition();
   const lastPenaltyIdRef = useRef("");
   const lastBgmCueRef = useRef("");
-  const lastModeratorMessageRef = useRef("");
+  const lastModeratorSpeechRef = useRef("");
+  const autoStartedTurnRef = useRef("");
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
@@ -192,16 +193,16 @@ export function RoomClient({ code }: RoomClientProps) {
   }, [snapshot]);
 
   useEffect(() => {
-    const moderatorMessage = snapshot?.room.moderatorMessage ?? "";
+    const moderatorMessage = snapshot?.room.moderatorSpeechMessage ?? "";
     if (
       speechSuppressedWhileSpeaking ||
       !moderatorMessage ||
-      moderatorMessage === lastModeratorMessageRef.current
+      moderatorMessage === lastModeratorSpeechRef.current
     ) {
       return;
     }
 
-    lastModeratorMessageRef.current = moderatorMessage;
+    lastModeratorSpeechRef.current = moderatorMessage;
     speakMessage(moderatorMessage);
   }, [snapshot, speechSuppressedWhileSpeaking]);
 
@@ -237,6 +238,12 @@ export function RoomClient({ code }: RoomClientProps) {
   const canUseMic = Boolean(
     snapshot?.room.status === "active" && snapshot.viewer.isCurrentSpeaker,
   );
+  const screenLabel =
+    snapshot?.room.status === "waiting"
+      ? "대기실"
+      : snapshot?.room.status === "active"
+        ? "토론방"
+        : "결과보기";
 
   const cleanupMedia = () => {
     if (rafRef.current) {
@@ -331,7 +338,7 @@ export function RoomClient({ code }: RoomClientProps) {
   const startRecognition = () => {
     const ctor = window.SpeechRecognition ?? window.webkitSpeechRecognition;
     if (!ctor) {
-      setError("이 브라우저는 음성 인식을 지원하지 않습니다. 텍스트 입력을 사용해주세요.");
+      setError("이 브라우저는 음성 인식을 지원하지 않습니다.");
       resetListeningState();
       return;
     }
@@ -396,7 +403,7 @@ export function RoomClient({ code }: RoomClientProps) {
     recognition.start();
   };
 
-  const handleStartSpeech = async () => {
+  const handleStartSpeech = useEffectEvent(async () => {
     if (!participantId || isListeningSession || !canUseMic) {
       return;
     }
@@ -418,6 +425,7 @@ export function RoomClient({ code }: RoomClientProps) {
       });
     } catch (actionError) {
       setError(actionError instanceof Error ? actionError.message : "마이크를 시작하지 못했습니다.");
+      autoStartedTurnRef.current = "";
       resetListeningState();
       return;
     }
@@ -427,21 +435,21 @@ export function RoomClient({ code }: RoomClientProps) {
     isFinalizingRef.current = false;
     setIsListeningSession(true);
     startRecognition();
-  };
+  });
 
-  const handleStopSpeech = () => {
-    if (!isListeningSession) {
+  useEffect(() => {
+    if (!snapshot || !speechSupported || !snapshot.viewer.isCurrentSpeaker || snapshot.room.status !== "active") {
       return;
     }
 
-    shouldAutoRestartRecognitionRef.current = false;
-    stopRequestedRef.current = true;
-    recognitionRef.current?.stop();
-
-    if (!recognitionRef.current) {
-      void finalizeListeningSession();
+    const currentTurnKey = `${snapshot.room.turn.round}:${snapshot.viewer.participantId}`;
+    if (isListeningSession || autoStartedTurnRef.current === currentTurnKey) {
+      return;
     }
-  };
+
+    autoStartedTurnRef.current = currentTurnKey;
+    void handleStartSpeech();
+  }, [snapshot, speechSupported, isListeningSession]);
 
   const handleLeaveWaitingRoom = () => {
     if (!participantId) {
@@ -502,28 +510,6 @@ export function RoomClient({ code }: RoomClientProps) {
     });
   };
 
-  const handleManualSubmit = () => {
-    if (!participantId || !manualTranscript.trim()) {
-      return;
-    }
-
-    startTransition(async () => {
-      try {
-        const response = await postJson<{ snapshot: RoomSnapshot }>(
-          `/api/rooms/${code}/manual-utterance`,
-          {
-            participantId,
-            transcript: manualTranscript.trim(),
-          },
-        );
-        setSnapshot(response.snapshot);
-        setManualTranscript("");
-      } catch (actionError) {
-        setError(actionError instanceof Error ? actionError.message : "텍스트 저장에 실패했습니다.");
-      }
-    });
-  };
-
   if (!participantId) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#fff7d8] px-6 text-center">
@@ -549,7 +535,10 @@ export function RoomClient({ code }: RoomClientProps) {
         <div className="mx-auto flex max-w-4xl flex-col gap-3">
           <section className="rounded-[30px] border border-white/70 bg-white/78 p-4 shadow-[0_18px_60px_rgba(255,150,36,0.14)] sm:p-5">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c16a16]">
-              결과 보기
+              결과보기
+            </p>
+            <p className="mt-2 text-sm font-semibold text-[#9a5a17] sm:text-base">
+              메인 주제 · {snapshot.room.topic}
             </p>
             <h1 className="mt-2 text-3xl font-bold leading-tight sm:text-4xl">
               {snapshot.room.finalReport.headline}
@@ -611,14 +600,24 @@ export function RoomClient({ code }: RoomClientProps) {
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(255,228,92,0.62),_transparent_34%),linear-gradient(160deg,_#fffad7_0%,_#ffe4b8_36%,_#ffd2a8_70%,_#fff0c2_100%)] px-3 py-3 text-slate-900 sm:px-6">
       <div className="mx-auto flex max-w-5xl flex-col gap-3">
         <section className="rounded-[30px] border border-white/70 bg-white/76 p-4 shadow-[0_18px_60px_rgba(255,152,44,0.16)] backdrop-blur sm:p-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c16a16]">
+            {screenLabel}
+          </p>
           <div className="flex flex-wrap items-start gap-3">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#c16a16]">
-                room code
+                {snapshot?.room.status === "waiting" ? "방 코드" : "메인 주제"}
               </p>
-              <div className="mt-2 text-4xl font-black tracking-[0.28em] text-[#20160f] sm:text-6xl">
-                {code}
+              <div className="mt-2 text-3xl font-black leading-tight text-[#20160f] sm:text-5xl">
+                {snapshot?.room.status === "waiting"
+                  ? code
+                  : snapshot?.room.topic ?? "토론방 불러오는 중"}
               </div>
+              {snapshot?.room.status === "waiting" ? (
+                <p className="mt-2 text-sm font-semibold text-[#9a5a17] sm:text-base">
+                  메인 주제 · {snapshot.room.topic}
+                </p>
+              ) : null}
             </div>
             <div className="mt-1 flex flex-wrap gap-2 text-xs font-semibold sm:text-sm">
               {snapshot ? (
@@ -636,24 +635,44 @@ export function RoomClient({ code }: RoomClientProps) {
 
           <div className="mt-4 rounded-[24px] bg-[#20160f] px-4 py-4 text-[#fff6dc]">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#ffd447]">
-              메인 주제
+              {snapshot?.room.status === "waiting" ? "현재 상태" : "현재 토론주제"}
             </p>
-            <h1 className="mt-2 text-2xl font-bold leading-snug sm:text-3xl">
-              {snapshot?.room.topic ?? "토론방 불러오는 중"}
+            <h1 className="mt-2 text-xl font-bold leading-snug sm:text-2xl">
+              {snapshot?.room.status === "waiting"
+                ? "모든 참가자가 입장하면 토론이 시작됩니다."
+                : currentAgenda?.title ?? "소주제 준비 중"}
             </h1>
             <div className="mt-4 rounded-[20px] bg-[#2b1f16] px-4 py-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#ffd447]">
-                AI 사회자
-              </p>
-              <p className="mt-2 text-base leading-7 sm:text-lg">
-                {snapshot?.room.moderatorMessage ?? "진행 상황을 준비 중입니다."}
-              </p>
-              {currentAgenda ? (
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#ffd447]">
+                    AI 사회자
+                  </p>
+                  <p className="mt-2 text-base leading-7 sm:text-lg">
+                    {snapshot?.room.moderatorMessage ?? "진행 상황을 준비 중입니다."}
+                  </p>
+                </div>
+                {snapshot?.room.status === "active" ? (
+                  <button
+                    type="button"
+                    onClick={() => setShowRules((prev) => !prev)}
+                    className="shrink-0 rounded-full bg-[#ff8b2b] px-3 py-2 text-xs font-semibold text-white transition hover:bg-[#f07509]"
+                  >
+                    {showRules ? "규칙 닫기" : "규칙 보기"}
+                  </button>
+                ) : null}
+              </div>
+              {showRules && snapshot?.room.status === "active" ? (
                 <div className="mt-4 rounded-[18px] bg-[#fff7df] px-4 py-3 text-[#20160f]">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#c16a16]">
-                    현재 소주제
+                    토론 규칙
                   </p>
-                  <p className="mt-1 text-sm font-semibold sm:text-base">{currentAgenda.title}</p>
+                  <div className="mt-2 space-y-1 text-sm leading-6">
+                    <p>1. 발언 요청은 선착순입니다.</p>
+                    <p>2. 한 번에 한 사람만 말합니다.</p>
+                    <p>3. 발언이 끝나면 요청 큐는 초기화됩니다.</p>
+                    <p>4. 겹쳐 말하거나 목소리가 커지면 벌점이 쌓입니다.</p>
+                  </div>
                 </div>
               ) : null}
             </div>
@@ -674,11 +693,11 @@ export function RoomClient({ code }: RoomClientProps) {
 
         {snapshot?.room.status === "waiting" ? (
           <section className="rounded-[30px] border border-white/70 bg-white/78 p-4 shadow-[0_18px_55px_rgba(255,152,44,0.12)] sm:p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c46d16]">
+              대기실
+            </p>
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c46d16]">
-                  대기실
-                </p>
                 <h2 className="mt-2 text-2xl font-semibold sm:text-3xl">
                   {snapshot.room.participants.length}명 모였어요
                 </h2>
@@ -783,27 +802,11 @@ export function RoomClient({ code }: RoomClientProps) {
                 </button>
                 <button
                   type="button"
-                  disabled={isPending || !canUseMic || isListeningSession}
-                  onClick={handleStartSpeech}
-                  className="rounded-full bg-[#ffd447] px-4 py-3 text-sm font-semibold text-[#6b4300] transition hover:bg-[#f5c52a] disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  마이크 사용
-                </button>
-                <button
-                  type="button"
-                  disabled={isPending || !isListeningSession}
-                  onClick={handleStopSpeech}
-                  className="rounded-full bg-[#20160f] px-4 py-3 text-sm font-semibold text-[#fff7d8] transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  마이크 종료
-                </button>
-                <button
-                  type="button"
-                  disabled={isPending || !snapshot.viewer.canEndTurn || isListeningSession}
+                  disabled={isPending || !snapshot.viewer.canEndTurn}
                   onClick={handleEndTurn}
-                  className="rounded-full bg-[#fff2a5] px-4 py-3 text-sm font-semibold text-[#7b4c0f] transition hover:bg-[#ffe87b] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="rounded-full bg-[#fff2a5] px-4 py-3 text-sm font-semibold text-[#7b4c0f] transition hover:bg-[#ffe87b] disabled:cursor-not-allowed disabled:opacity-50 sm:col-span-3"
                 >
-                  턴 종료
+                  발언종료
                 </button>
               </div>
 
@@ -847,12 +850,12 @@ export function RoomClient({ code }: RoomClientProps) {
                   <h2 className="mt-2 text-2xl font-semibold">발언 캡처</h2>
                 </div>
                 <div className="rounded-full bg-[#fff2a5] px-3 py-2 text-sm font-semibold text-[#7b4c0f]">
-                  {speechSupported ? "음성 가능" : "텍스트 모드"}
+                  {speechSupported ? "자동 마이크" : "음성 지원 필요"}
                 </div>
               </div>
 
               <div className="mt-4 grid gap-3 lg:grid-cols-[0.95fr_1.05fr]">
-                <div className="rounded-[24px] bg-[#20160f] p-4 text-[#fff6dc]">
+                <div className="rounded-[24px] bg-[#20160f] p-4 text-[#fff6dc] lg:col-span-2">
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#ffd447]">
                     실시간 문장
                   </p>
@@ -860,30 +863,10 @@ export function RoomClient({ code }: RoomClientProps) {
                     {liveTranscript ||
                       (isListeningSession
                         ? "말하는 동안 문장이 계속 쌓입니다."
-                        : "내 차례에 마이크 사용을 누르면 발언 종료 전까지 계속 듣습니다.")}
+                        : canUseMic
+                          ? "발언권을 얻으면 마이크가 자동으로 켜집니다."
+                          : "발언권을 얻으면 자동으로 마이크가 켜집니다.")}
                   </p>
-                </div>
-                <div className="space-y-3">
-                  <textarea
-                    className="min-h-28 w-full rounded-[24px] border border-[#ffd698] bg-[#fff9e8] px-4 py-4 text-sm outline-none transition focus:border-[#ff9b35] focus:ring-4 focus:ring-[#ffe18e]"
-                    value={manualTranscript}
-                    onChange={(event) => setManualTranscript(event.target.value)}
-                    placeholder="음성이 어려우면 지금 한 말을 텍스트로 저장해도 됩니다."
-                    disabled={!canUseMic || isListeningSession}
-                  />
-                  <button
-                    type="button"
-                    onClick={handleManualSubmit}
-                    disabled={
-                      isPending ||
-                      !manualTranscript.trim() ||
-                      !canUseMic ||
-                      isListeningSession
-                    }
-                    className="w-full rounded-full bg-[#20160f] px-4 py-3 text-sm font-semibold text-[#fff7d8] transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    텍스트 저장
-                  </button>
                 </div>
               </div>
 

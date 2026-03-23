@@ -65,6 +65,11 @@ export function waitingPrompt(joined: number, expected: number) {
 
 export function debateStartedPrompt(room: DebateRoom) {
   const agenda = room.agenda[room.currentAgendaIndex];
+  return `모든 참가자가 입장해 토론을 시작합니다. 첫 소주제는 "${agenda.title}"입니다.`;
+}
+
+export function debateStartedSpeech(room: DebateRoom) {
+  const agenda = room.agenda[room.currentAgendaIndex];
   return [
     "모든 참가자가 입장해 토론을 시작합니다.",
     `첫 소주제는 "${agenda.title}"입니다.`,

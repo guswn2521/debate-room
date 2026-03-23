@@ -101,6 +101,7 @@ export interface DebateRoom {
   updatedAt: string;
   version: number;
   moderatorMessage: string;
+  moderatorSpeechMessage: string;
   agenda: AgendaItem[];
   currentAgendaIndex: number;
   participants: Participant[];
