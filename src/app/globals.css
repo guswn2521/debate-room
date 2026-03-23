@@ -1,10 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fff8d7;
-  --foreground: #1f140d;
-  --panel: rgba(255, 255, 255, 0.76);
-  --font-sans-custom: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
+  --background: #f8f8f7;
+  --foreground: #18181b;
+  --panel: rgba(255, 255, 255, 0.92);
+  --primary: #4a5ae8;
+  --primary-dark: #3a48c8;
+  --accent: #d96b8d;
+  --accent-dark: #b85575;
+  --text-200: #52525b;
+  --text-300: #a1a1aa;
+  --border: #e4e4e7;
+  --chip-bg: #fbf0f4;
+  --chip-text: #b84870;
+  --host-bg: #eef0ff;
+  --host-text: #4a5ae8;
+  --rail-bg: #f0f0ef;
+  --hero-accent-bg: #eef0ff;
+  --hero-accent-border: #dde0ff;
+  --font-sans-custom: var(--font-body), "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
+  --font-display-custom: var(--font-display), var(--font-sans-custom);
   --font-mono-custom: "IBM Plex Mono", "Menlo", "Consolas", monospace;
 }
 
@@ -30,10 +45,19 @@ body {
   font-family: var(--font-sans-custom);
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display-custom);
+}
+
 button {
   cursor: pointer;
 }
 
 ::selection {
-  background: rgba(255, 196, 67, 0.45);
+  background: rgba(217, 107, 141, 0.26);
 }
