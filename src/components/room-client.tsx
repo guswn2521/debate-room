@@ -514,7 +514,7 @@ export function RoomClient({ code }: RoomClientProps) {
 
   if (!participantId) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(74,90,232,0.06),_transparent_36%),linear-gradient(180deg,_#f8f8f7_0%,_#f2f3f9_100%)] px-6 text-center">
+      <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(43,168,150,0.07),_transparent_36%),linear-gradient(180deg,_#f8f8f7_0%,_#f2f8f7_100%)] px-6 text-center">
         <div className="max-w-lg rounded-[28px] border border-[#e4e4e7] bg-white/92 p-8 shadow-[0_12px_32px_rgba(28,25,23,0.07)]">
           <p className="text-lg font-semibold text-slate-900">
             참가자 정보가 없습니다. 메인 화면에서 다시 입장해주세요.
@@ -522,7 +522,7 @@ export function RoomClient({ code }: RoomClientProps) {
           <button
             type="button"
             onClick={() => router.push("/")}
-            className="mt-6 rounded-full bg-[#4a5ae8] px-5 py-3 font-semibold text-white shadow-[0_1px_3px_rgba(74,90,232,0.28),0_1px_2px_rgba(0,0,0,0.06)] transition hover:opacity-90"
+            className="mt-6 rounded-full bg-[#2ba896] px-5 py-3 font-semibold text-white shadow-[0_1px_3px_rgba(43,168,150,0.3),0_1px_2px_rgba(0,0,0,0.06)] transition hover:opacity-90"
           >
             홈으로
           </button>
@@ -533,7 +533,7 @@ export function RoomClient({ code }: RoomClientProps) {
 
   if (snapshot?.room.status === "ended" && snapshot.room.finalReport) {
     return (
-      <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(74,90,232,0.06),_transparent_36%),linear-gradient(180deg,_#f8f8f7_0%,_#f2f3f9_100%)] px-3 py-3 text-slate-900 sm:px-6">
+      <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(43,168,150,0.07),_transparent_36%),linear-gradient(180deg,_#f8f8f7_0%,_#f2f8f7_100%)] px-3 py-3 text-slate-900 sm:px-6">
         <div className="mx-auto flex max-w-4xl flex-col gap-3">
           <ScreenProgress current="results" />
 
@@ -585,7 +585,7 @@ export function RoomClient({ code }: RoomClientProps) {
                     <p className="text-base font-semibold text-slate-900">{participant.name}</p>
                     <p className="text-sm text-slate-600">{penaltyLabel(participant.score)}</p>
                   </div>
-                  <div className="rounded-full bg-[#fbf0f4] px-4 py-2 text-base font-bold text-[#b84870]">
+                  <div className="rounded-full bg-[#e8f7f4] px-4 py-2 text-base font-bold text-[#1d7a6c]">
                     {participant.score}
                   </div>
                 </div>
@@ -596,7 +596,7 @@ export function RoomClient({ code }: RoomClientProps) {
           <button
             type="button"
             onClick={() => router.push("/")}
-            className="w-full rounded-full bg-[#d96b8d] px-4 py-3 text-sm font-semibold text-white shadow-[0_1px_3px_rgba(217,107,141,0.28),0_1px_2px_rgba(0,0,0,0.06)] transition hover:opacity-90"
+            className="w-full rounded-full bg-[#2ba896] px-4 py-3 text-sm font-semibold text-white shadow-[0_1px_3px_rgba(43,168,150,0.3),0_1px_2px_rgba(0,0,0,0.06)] transition hover:opacity-90"
           >
             메인으로 돌아가기
           </button>
@@ -606,7 +606,7 @@ export function RoomClient({ code }: RoomClientProps) {
   }
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(74,90,232,0.06),_transparent_36%),linear-gradient(180deg,_#f8f8f7_0%,_#f2f3f9_100%)] px-3 py-3 text-slate-900 sm:px-6">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(43,168,150,0.07),_transparent_36%),linear-gradient(180deg,_#f8f8f7_0%,_#f2f8f7_100%)] px-3 py-3 text-slate-900 sm:px-6">
       <div className="mx-auto flex max-w-5xl flex-col gap-3">
         <ScreenProgress current={currentScreen} />
 
@@ -618,7 +618,7 @@ export function RoomClient({ code }: RoomClientProps) {
                   <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#a1a1aa]">
                     방코드
                   </p>
-                  <div className="inline-flex rounded-full bg-[#d96b8d] px-5 py-2 text-2xl font-black tracking-[0.18em] text-white shadow-[0_1px_3px_rgba(217,107,141,0.28),0_1px_2px_rgba(0,0,0,0.06)] sm:text-3xl">
+                  <div className="inline-flex rounded-full bg-[#2ba896] px-5 py-2 text-2xl font-black tracking-[0.18em] text-white shadow-[0_1px_3px_rgba(43,168,150,0.3),0_1px_2px_rgba(0,0,0,0.06)] sm:text-3xl">
                     {code}
                   </div>
                 </div>
@@ -640,7 +640,7 @@ export function RoomClient({ code }: RoomClientProps) {
             </div>
             <div className="mt-1 flex flex-wrap gap-2 text-xs font-semibold sm:text-sm">
               {snapshot ? (
-                <span className="rounded-full bg-[#fbf0f4] px-3 py-2 text-[#b84870]">
+                <span className="rounded-full bg-[#e8f7f4] px-3 py-2 text-[#1d7a6c]">
                   {snapshot.room.participants.length}/{snapshot.room.participantsExpected}명
                 </span>
               ) : null}
@@ -649,14 +649,14 @@ export function RoomClient({ code }: RoomClientProps) {
                   <button
                     type="button"
                     onClick={() => setShowRules((prev) => !prev)}
-                    className="rounded-full border border-[#e4e4e7] bg-white px-3 py-2 text-[#52525b] transition hover:opacity-80"
+                    className="rounded-full border-[1.5px] border-[#2ba896] bg-white px-3 py-2 text-[#2ba896] transition hover:bg-[#e8f7f4]"
                   >
                     {showRules ? "규칙 닫기" : "규칙 보기"}
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowModeratorScript((prev) => !prev)}
-                    className="rounded-full border border-[#e4e4e7] bg-white px-3 py-2 text-[#52525b] transition hover:opacity-80"
+                    className="rounded-full border-[1.5px] border-[#2ba896] bg-white px-3 py-2 text-[#2ba896] transition hover:bg-[#e8f7f4]"
                   >
                     {showModeratorScript ? "사회자 닫기" : "사회자 보기"}
                   </button>
@@ -665,8 +665,8 @@ export function RoomClient({ code }: RoomClientProps) {
             </div>
           </div>
 
-          <div className="mt-4 rounded-[24px] border border-[#dde0ff] bg-[#eef0ff] px-4 py-4 text-[#18181b]">
-            <div className="mb-3 h-2 w-14 rounded-full bg-[#4a5ae8]" />
+          <div className="mt-4 rounded-[24px] border border-[#b8e4dc] bg-[#eef9f7] px-4 py-4 text-[#18181b]">
+            <div className="mb-3 h-2 w-14 rounded-full bg-[#2ba896]" />
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a1a1aa]">
               {snapshot?.room.status === "waiting" ? "현재 상태" : "현재 토론주제"}
             </p>
@@ -681,7 +681,7 @@ export function RoomClient({ code }: RoomClientProps) {
               </p>
             ) : null}
             {showModeratorScript && snapshot?.room.status === "active" ? (
-              <div className="mt-4 rounded-[20px] border border-[#ece5dc] bg-[#fffbf4] px-4 py-4 text-[#18181b]">
+              <div className="mt-4 rounded-[20px] border border-[#b8e4dc] bg-white px-4 py-4 text-[#18181b]">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a1a1aa]">
                   AI 사회자
                 </p>
@@ -707,7 +707,7 @@ export function RoomClient({ code }: RoomClientProps) {
         </section>
 
         {toastMessage ? (
-          <div className="rounded-[24px] border-2 border-[#d96b8d] bg-[#fbf0f4] px-4 py-4 text-center text-lg font-bold leading-7 text-[#b84870] shadow-[0_12px_30px_rgba(217,107,141,0.14)]">
+          <div className="rounded-[24px] border-2 border-[#2ba896] bg-[#e8f7f4] px-4 py-4 text-center text-lg font-bold leading-7 text-[#1d7a6c] shadow-[0_12px_30px_rgba(43,168,150,0.14)]">
             {toastMessage}
           </div>
         ) : null}
@@ -726,7 +726,7 @@ export function RoomClient({ code }: RoomClientProps) {
                   {snapshot.room.participants.length}명 모였어요
                 </h2>
               </div>
-              <div className="rounded-[22px] bg-[#fbf0f4] px-4 py-4 text-center text-[#b84870]">
+              <div className="rounded-[22px] bg-[#e8f7f4] px-4 py-4 text-center text-[#1d7a6c]">
                 <p className="text-xs font-semibold uppercase tracking-[0.14em]">남은 인원</p>
                 <p className="mt-1 text-3xl font-black">
                   {Math.max(snapshot.room.participantsExpected - snapshot.room.participants.length, 0)}
@@ -742,7 +742,7 @@ export function RoomClient({ code }: RoomClientProps) {
                 >
                   <span className="flex items-center gap-2">
                     {participant.isHost ? (
-                      <span className="rounded-full bg-[#eef0ff] px-2.5 py-1 text-[11px] uppercase tracking-[0.16em] text-[#4a5ae8]">
+                      <span className="rounded-full bg-[#e8f7f4] px-2.5 py-1 text-[11px] uppercase tracking-[0.16em] text-[#2ba896]">
                         방장
                       </span>
                     ) : null}
@@ -756,7 +756,7 @@ export function RoomClient({ code }: RoomClientProps) {
               type="button"
               onClick={handleLeaveWaitingRoom}
               disabled={isPending}
-              className="mt-4 w-full rounded-full bg-[#4a5ae8] px-4 py-3 text-sm font-semibold text-white shadow-[0_1px_3px_rgba(74,90,232,0.28),0_1px_2px_rgba(0,0,0,0.06)] transition hover:opacity-90 disabled:opacity-50"
+              className="mt-4 w-full rounded-full bg-[#2ba896] px-4 py-3 text-sm font-semibold text-white shadow-[0_1px_3px_rgba(43,168,150,0.3),0_1px_2px_rgba(0,0,0,0.06)] transition hover:opacity-90 disabled:opacity-50"
             >
               홈으로 돌아가기
             </button>
@@ -782,7 +782,7 @@ export function RoomClient({ code }: RoomClientProps) {
                     시작 {formatTime(snapshot.room.turn.startedAt ?? null)}
                   </p>
                 </div>
-                <div className="rounded-[20px] bg-[#fbf0f4] px-4 py-3 text-sm font-semibold text-[#b84870]">
+                <div className="rounded-[20px] bg-[#e8f7f4] px-4 py-3 text-sm font-semibold text-[#1d7a6c]">
                   {snapshot.viewer.queuePosition
                     ? `내 순서 ${snapshot.viewer.queuePosition}번`
                     : "턴 종료 후 큐 초기화"}
@@ -795,7 +795,7 @@ export function RoomClient({ code }: RoomClientProps) {
                     key={participant.id}
                     className={`rounded-[20px] px-3 py-3 ${
                       participant.id === snapshot.viewer.participantId
-                        ? "border border-[#4a5ae8] bg-[#fbf0f4]"
+                        ? "border border-[#2ba896] bg-[#eef9f7]"
                         : "border border-[#e4e4e7] bg-white"
                     }`}
                   >
@@ -806,7 +806,7 @@ export function RoomClient({ code }: RoomClientProps) {
                           {participant.isHost ? "방장" : "참가자"} · {penaltyLabel(participant.score)}
                         </p>
                       </div>
-                      <div className="rounded-full bg-[#fbf0f4] px-3 py-1.5 text-sm font-bold text-[#b84870]">
+                      <div className="rounded-full bg-[#e8f7f4] px-3 py-1.5 text-sm font-bold text-[#1d7a6c]">
                         {participant.score}
                       </div>
                     </div>
@@ -823,7 +823,7 @@ export function RoomClient({ code }: RoomClientProps) {
                       participantId,
                     })
                   }
-                  className="rounded-full bg-[#4a5ae8] px-4 py-3 text-sm font-semibold text-white shadow-[0_1px_3px_rgba(74,90,232,0.28),0_1px_2px_rgba(0,0,0,0.06)] transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="rounded-full bg-[#2ba896] px-4 py-3 text-sm font-semibold text-white shadow-[0_1px_3px_rgba(43,168,150,0.3),0_1px_2px_rgba(0,0,0,0.06)] transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   발언 요청
                 </button>
@@ -831,7 +831,7 @@ export function RoomClient({ code }: RoomClientProps) {
                   type="button"
                   disabled={isPending || !snapshot.viewer.canEndTurn}
                   onClick={handleEndTurn}
-                  className="rounded-full bg-[#d96b8d] px-4 py-3 text-sm font-semibold text-white shadow-[0_1px_3px_rgba(217,107,141,0.28),0_1px_2px_rgba(0,0,0,0.06)] transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:col-span-3"
+                  className="rounded-full bg-[#228f7e] px-4 py-3 text-sm font-semibold text-white shadow-[0_1px_3px_rgba(43,168,150,0.3),0_1px_2px_rgba(0,0,0,0.06)] transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:col-span-3"
                 >
                   발언종료
                 </button>
@@ -846,7 +846,7 @@ export function RoomClient({ code }: RoomClientProps) {
                     })
                   }
                   disabled={isPending || isListeningSession}
-                  className="mt-3 w-full rounded-full border border-[#e4e4e7] bg-white px-4 py-3 text-sm font-semibold text-[#52525b] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="mt-3 w-full rounded-full border-[1.5px] border-[#2ba896] bg-white px-4 py-3 text-sm font-semibold text-[#2ba896] transition hover:bg-[#e8f7f4] disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   다음 소주제
                 </button>
@@ -861,7 +861,7 @@ export function RoomClient({ code }: RoomClientProps) {
                     })
                   }
                   disabled={isPending || isListeningSession}
-                  className="mt-3 w-full rounded-full bg-[#d96b8d] px-4 py-3 text-sm font-semibold text-white shadow-[0_1px_3px_rgba(217,107,141,0.28),0_1px_2px_rgba(0,0,0,0.06)] transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="mt-3 w-full rounded-full bg-[#228f7e] px-4 py-3 text-sm font-semibold text-white shadow-[0_1px_3px_rgba(43,168,150,0.3),0_1px_2px_rgba(0,0,0,0.06)] transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   토론 종료
                 </button>
@@ -876,13 +876,13 @@ export function RoomClient({ code }: RoomClientProps) {
                   </p>
                   <h2 className="mt-2 text-2xl font-semibold">발언 캡처</h2>
                 </div>
-                <div className="rounded-full bg-[#eef0ff] px-3 py-2 text-sm font-semibold text-[#4a5ae8]">
+                <div className="rounded-full bg-[#e8f7f4] px-3 py-2 text-sm font-semibold text-[#2ba896]">
                   {speechSupported ? "자동 마이크" : "음성 지원 필요"}
                 </div>
               </div>
 
               <div className="mt-4 grid gap-3 lg:grid-cols-[0.95fr_1.05fr]">
-                <div className="rounded-[24px] bg-[#eef0ff] p-4 text-[#18181b] lg:col-span-2">
+                <div className="rounded-[24px] bg-[#eef9f7] p-4 text-[#18181b] lg:col-span-2">
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#a1a1aa]">
                     실시간 문장
                   </p>

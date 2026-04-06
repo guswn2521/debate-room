@@ -23,9 +23,9 @@ export function ScreenProgress({ current }: ScreenProgressProps) {
               key={step.id}
               className={`min-w-0 rounded-full px-2 py-2 text-center text-[11px] font-semibold tracking-[-0.01em] sm:px-3 sm:py-2.5 sm:text-sm ${
                 isActive
-                  ? "bg-[#4a5ae8] text-white"
+                  ? "bg-[#2ba896] text-white"
                   : index < currentIndex
-                    ? "bg-[#eef0ff] text-[#4a5ae8]"
+                    ? "bg-[#e8f7f4] text-[#2ba896]"
                     : "bg-transparent text-[#a1a1aa]"
               }`}
             >

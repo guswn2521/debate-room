@@ -15,24 +15,24 @@ const noto = Noto_Sans_KR({
 const C = {
   bg: "#F8F8F7",
   surface: "#FFFFFF",
-  primary: "#4A5AE8",
-  primaryDark: "#3A48C8",
-  accent: "#D96B8D",
-  accentDark: "#B85575",
+  primary: "#2BA896",
+  primaryDark: "#228F7E",
+  accent: "#2BA896",
+  accentDark: "#228F7E",
   text100: "#18181B",
   text200: "#52525B",
   text300: "#A1A1AA",
   border: "#E4E4E7",
-  chipBg: "#FBF0F4",
-  chipText: "#B84870",
-  hostBg: "#EEF0FF",
-  hostText: "#4A5AE8",
+  chipBg: "#E8F7F4",
+  chipText: "#1D7A6C",
+  hostBg: "#E8F7F4",
+  hostText: "#2BA896",
   railBg: "#F0F0EF",
-  railActive: "#4A5AE8",
-  railComplete: "#EEF0FF",
-  railCompleteText: "#4A5AE8",
-  heroAccentBg: "#EEF0FF",
-  heroAccentBorder: "#DDE0FF",
+  railActive: "#2BA896",
+  railComplete: "#E8F7F4",
+  railCompleteText: "#2BA896",
+  heroAccentBg: "#EEF9F7",
+  heroAccentBorder: "#B8E4DC",
 } as const;
 
 // ─── Atom Components ─────────────────────────────────────────────────────────
@@ -106,13 +106,13 @@ function Btn({
     style = {
       background: disabled ? "#E4E4E7" : C.primary,
       color: disabled ? "#A1A1AA" : "#fff",
-      boxShadow: disabled ? "none" : "0 1px 3px rgba(74,90,232,0.28), 0 1px 2px rgba(0,0,0,0.06)",
+      boxShadow: disabled ? "none" : "0 1px 3px rgba(43,168,150,0.3), 0 1px 2px rgba(0,0,0,0.05)",
     };
   } else if (variant === "secondary") {
     style = {
-      background: disabled ? "#E4E4E7" : C.accent,
-      color: disabled ? "#A1A1AA" : "#fff",
-      boxShadow: disabled ? "none" : "0 1px 3px rgba(217,107,141,0.28), 0 1px 2px rgba(0,0,0,0.06)",
+      background: disabled ? "transparent" : "transparent",
+      color: disabled ? "#A1A1AA" : C.primary,
+      border: disabled ? `1.5px solid #E4E4E7` : `1.5px solid ${C.primary}`,
     };
   } else {
     style = {
@@ -1052,7 +1052,7 @@ export function DesignFinal() {
     <main
       className="min-h-screen px-4 py-8 sm:px-6 sm:py-10"
       style={{
-        background: `radial-gradient(circle at top, rgba(74,90,232,0.06), transparent 36%), linear-gradient(180deg, ${C.bg} 0%, #F2F3F9 100%)`,
+        background: `radial-gradient(circle at top, rgba(43,168,150,0.07), transparent 36%), linear-gradient(180deg, ${C.bg} 0%, #F2F8F7 100%)`,
         color: C.text100,
       }}
     >
